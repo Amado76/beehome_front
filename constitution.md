@@ -18,6 +18,7 @@ This document contains the principles that apply to every change in the Nosso Di
 - Layers, state management, data access, responsive composition, and project structure: [Frontend Architecture](docs/architecture.md)
 - Visual identity, Flutter theme, tokens, and reusable UI components: [Design System](docs/design-system.md)
 - Test-driven development, test coverage, and completion criteria: [Testing and Definition of Done](docs/testing.md)
-- Any feature that uses the BeeHome backend: [Backend integration guide index](docs/backend-api/docs/frontend/README.md). Follow its feature index and related guides; verify implementation behavior when a contract is unclear. Treat the guides as the source for supported API behavior. Never invent routes, fields, permissions, or flows. Report an API gap when required behavior is missing or undocumented.
+- Any feature that uses the BeeHome backend: [Backend integration guide index](docs/backend-api/README.md). Follow its feature index and related guides; verify implementation behavior when a contract is unclear. Treat the guides as the source for supported API behavior. Never invent routes, fields, permissions, or flows. Report an API gap when required behavior is missing or undocumented.
+- Initial frontend architecture and localization decisions: [Frontend decisions](docs/frontend-decisions/README.md).
 
 Read the relevant document before making decisions in its area. For example, consult the Design System for visual work and Frontend Architecture when changing application structure or data flow. If guidance conflicts, follow this constitution's project-wide principles and keep the implementation simple; update the focused document when an agreed product decision changes.

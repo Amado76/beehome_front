@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "[pre-commit] Formatting Dart files..."
+format_log="$(mktemp)"
+trap 'rm -f "$format_log"' EXIT HUP INT TERM
+if ! dart format . >"$format_log" 2>&1; then
+  cat "$format_log"
+  exit 1
+fi
+cat "$format_log"
+
+# Stage only Dart files reported as changed by dart format.
+awk '$1 == "Formatted" && $NF ~ /\.dart$/ { sub(/^Formatted /, ""); print }' \
+  "$format_log" |
+  while IFS= read -r formatted_file; do
+    [ -n "$formatted_file" ] && git add -- "$formatted_file"
+  done
+
+echo "[pre-commit] Running Flutter analyzer..."
+flutter analyze --fatal-infos --fatal-warnings
+
+echo "[pre-commit] Running Flutter tests..."
+flutter test
+
+echo "[pre-commit] Checks passed."
