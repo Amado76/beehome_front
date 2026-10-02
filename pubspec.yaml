@@ -1,5 +1,5 @@
 name: beehome
-description: "A new Flutter project."
+description: "BeeHome family workspace."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -9,6 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  dio: ^5.9.2
+  flutter_secure_storage: ^10.0.0
+  shared_preferences: ^2.5.5
+  get_it: ^9.3.0
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +24,21 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  assets:
+    - assets/mascote.png
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans.ttf
+    - family: CourierPrime
+      fonts:
+        - asset: assets/fonts/CourierPrime/CourierPrime.ttf
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka.ttf
+    - family: SpaceMono
+      fonts:
+        - asset: assets/fonts/SpaceMono/SpaceMono-Regular.ttf
+        - asset: assets/fonts/SpaceMono/SpaceMono-Bold.ttf
+          weight: 700

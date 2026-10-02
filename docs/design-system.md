@@ -2,15 +2,17 @@
 
 ## Visual identity
 
-The interface should resemble a clean physical notebook or sheet of paper: predominantly white, black, and soft gray; generous whitespace; rounded edges; typewriter-inspired typography; and restrained hand-drawn details. Keep the result legible and uncluttered rather than adding decoration for its own sake.
+The interface should feel warm, playful, and family-oriented. Use soft pastel colors, rounded shapes, restrained shadows, and hand-drawn illustrative details while keeping the result legible and uncluttered. The bee mascot and illustrations are assets in this visual language, not structural UI dependencies.
 
-Adults use a mostly monochrome interface. For children, a configured pastel color marks completed activities; pending activities are gray. This color conveys completion state, not decoration alone, and must be supported by another understandable state cue where needed.
+Use semantic color roles consistently across adult and child experiences. A child's configured pastel completion color marks completed activities; pending activities are gray. Completion color conveys state, not decoration alone, and must be supported by another understandable state cue where needed.
 
 ## Theme first
 
 The Design System is Flutter's `ThemeData` plus reusable Nosso Dia components. Configure native Flutter styling globally through the theme wherever Flutter provides an adequate mechanism, including typography, inputs, buttons, cards, checkboxes, navigation elements, and dividers. A native widget such as `TextField` should receive the product's default styling without repeating decoration at each use.
 
-Keep shared visual primitives centralized. The initial theme area may include:
+Keep shared visual primitives centralized. Define semantic tokens for color,
+typography, spacing, radius, elevation, and recurring layout constraints. The
+initial theme area may include:
 
 ```text
 design_system/
@@ -20,6 +22,7 @@ design_system/
     app_typography.dart
     app_spacing.dart
     app_radius.dart
+    app_elevation.dart
     app_breakpoints.dart
   components/
 ```
@@ -36,6 +39,46 @@ Do not wrap native widgets solely to rename them or provide a few repeated style
 
 ## Typography and themes
 
-Set the typewriter-inspired primary font family and the text styles centrally in the theme. Prefer theme text styles in views over local font sizes and weights. Legibility takes priority over aesthetic fidelity for long text, small text, and input fields; a more readable variant may be used where needed.
+Set the primary font family and text styles centrally in the theme. Prefer theme text styles in views over local font sizes and weights. Legibility takes priority over aesthetic fidelity for long text, small text, and input fields; a more readable variant may be used where needed.
 
 Structure semantic tokens so a future light or dark theme can map concepts such as paper and ink differently, without requiring widgets to hard-code those colors. Dark mode itself is not implied as an MVP requirement.
+
+## Responsive layout
+
+Tablet landscape is the primary UX target. Centralize breakpoints and recurring
+layout constraints in the design system. Mobile, tablet, and desktop/Web may use
+purpose-built compositions where that produces a clearer experience; do not
+mechanically convert every horizontal layout into a vertical one.
+
+## Splash identity
+
+Use the supplied Stitch reference for the startup splash: honey accents (`#F7C948`, `#F5B72E`,
+`#DE9B15`), and charcoal ink (`#1F1A17`, muted `#433A36`). Keep theme
+roles accessible by using dark honey ink (`#684507`) on filled honey controls.
+Bundle Plus Jakarta Sans for UI, Courier Prime for notebook captions, and
+Fredoka for the brand; include their font licenses under `assets/fonts/`.
+
+The splash background is plain white until a background image is supplied.
+Do not render the paper dots or background glows procedurally. `BeeHomeApp`
+accepts an optional `splashBackgroundImage` (`ImageProvider`), passed to
+`SplashView.backgroundImage`; use an `AssetImage` when the PNG is available
+and register that asset in `pubspec.yaml`. Missing or failed images fall back
+to white. The rest of the app retains its paper theme color.
+
+Reuse `assets/mascote.png`. The splash shows a gently floating mascot, a
+pulsing header dot, an animated dotted flight trail, and an indeterminate honey
+loading bar. Respect the device's reduced-motion preference. Do not delay
+startup solely to display the splash or imply measured loading percentages.
+The ViewModel randomly changes among five localized phrases every 1.8 seconds
+while loading, without immediately repeating a phrase, and stops the timer
+when loading ends or the ViewModel is disposed. Render all phrases in
+Portuguese, English, Spanish, and Estonian using generated ARB localizations.
+The footer describes the brand without claiming unsupported offline behavior.
+
+Tablet landscape is the primary splash reference; Web shares its bounded,
+rounded notebook canvas. `SplashLayout` selects the compact or notebook
+presentation once from the available width. The notebook profile uses a wider
+420-pixel loading module, larger Plus Jakarta Sans brand typography, Space Mono
+captions, and a green version-status dot. Mobile retains the compact Fredoka
+and Courier Prime composition. Keep animations, translations, and version data
+shared. The canvas still uses white as its background-image fallback.

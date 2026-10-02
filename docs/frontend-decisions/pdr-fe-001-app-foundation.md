@@ -22,24 +22,74 @@ feature subdirectories as a feature needs them.
 
 ```text
 lib/
-  app/                    # app widget, bootstrap, route composition
+  app/
+    bootstrap.dart        # startup and root lifecycle
+    di/                   # GetIt registrations, grouped by module
+    services/
+    view_models/
+    views/
   core/
-    config/               # API origin and runtime configuration
-    network/              # Dio client, interceptors, API errors
-    storage/              # session and simple-preference adapters
+    auth/
+      models/
+      repos/              # local session and remote authentication repositories
+      services/
+    config/
+      models/
+    network/
+      clients/
+      models/
+    preferences/
+      repos/
   design_system/          # theme, tokens, shared product components
   l10n/                   # ARB translation resources and generated localizations
   features/
     auth/
     family/
+
+assets/
+  images/
+  illustrations/
+  mascots/
+  icons/
 ```
 
 Keep the existing feature flow proportional to complexity:
-`View → ViewModel → Controller → Repository/Service → API or local storage`.
-Use `ChangeNotifier` and Flutter listenable builders by default. Do not add a
-router, service locator, dependency injection package, database, or state
-management package until a concrete feature need justifies it. Construct shared
-services at app bootstrap and pass dependencies explicitly.
+`View → ViewModel → Service → Repository → API or local storage`.
+Within both `core/` and `features/`, group by feature before layer. Repositories
+for local and remote data stay separate within their feature's `repos/` directory.
+Tests mirror the feature and layer structure.
+Use `ChangeNotifier` and Flutter listenable builders by default. Use GetIt to register shared dependencies and ViewModel factories in `app/di/`.
+Keep constructor injection in consumers and container access at composition
+boundaries. The app root disposes its ViewModel before resetting the container;
+`AppServices` owns the shared session and API client disposal. Do not add a router,
+database, or state management package until a concrete feature need justifies it.
+
+Apply SOLID to keep responsibilities focused and dependencies replaceable,
+without adding abstractions or layers mechanically.
+
+### Design system and visual foundation
+
+- Keep shared visual foundations under `lib/design_system/`; product features
+  must not define independent visual languages.
+- Centralize semantic tokens for color, typography, spacing, radius, elevation,
+  and recurring layout constraints. Prefer semantic tokens over raw palette
+  values in feature code.
+- Use Flutter `ThemeData` for application-wide styling. Product-specific
+  components that cannot be represented appropriately through theme
+  configuration belong in `design_system/components/`.
+- Add shared buttons, text fields, cards/surfaces, dialogs, selectors, and
+  navigation elements incrementally as concrete screens require them. Do not
+  create a speculative component library upfront.
+- Use a warm, playful, family-oriented visual language with soft pastel colors,
+  rounded shapes, restrained shadows, and hand-drawn illustrative elements.
+  The bee mascot and illustrations are assets, not structural UI dependencies.
+- Treat tablet landscape as the primary UX target. Mobile, tablet, and
+  desktop/Web may use purpose-built compositions where appropriate; do not
+  assume responsive behavior comes from mechanically converting rows to
+  columns.
+- Organize image assets under `assets/images/`, hand-drawn artwork under
+  `assets/illustrations/`, mascots under `assets/mascots/`, and standalone icons
+  under `assets/icons/`. Register only needed asset paths in `pubspec.yaml`.
 
 ### HTTP and API behavior
 
@@ -70,7 +120,7 @@ is not configured; successful native/curl requests do not prove browser access.
 
 ### Credentials and storage
 
-Introduce small interfaces (`SessionStore` and `AppPreferencesStore`) so feature
+Introduce small interfaces (`SessionRepository` and `AppPreferencesRepository`) so feature
 code does not depend directly on a platform plugin.
 
 - On iOS and Android, store the access/refresh token pair using
@@ -82,7 +132,7 @@ code does not depend directly on a platform plugin.
   implementation as equivalent to Keychain/Keystore. Revisit persistent Web
   sessions after a deployment security review (HTTPS, same-origin/CORS,
   browser threat model, and session lifetime).
-- Use `SharedPreferencesAsync` through `AppPreferencesStore` for small,
+- Use `SharedPreferencesAsync` directly in `LocalAppPreferencesRepository` for small,
   non-sensitive settings such as selected interface locale and selected family
   ID. Treat the family ID as navigation convenience only: revalidate it against
   accessible families and clear it on account switch/sign-out.
@@ -111,7 +161,7 @@ login even if the operation's success message is localized.
 
 ## Initial implementation acceptance criteria
 
-- App bootstrap owns one configured Dio client and injects it into consumers.
+- GetIt registers one configured Dio client behind `ApiClient`; `AppServices` owns its disposal.
 - API error parsing handles `application/problem+json`, absent bodies, 204, and
   non-JSON failures without leaking server internals to the UI.
 - Protected requests receive the current Bearer token; public requests do not.
@@ -121,6 +171,13 @@ login even if the operation's success message is localized.
   scoped selection when the session changes.
 - The app shell has explicit loading, signed-out, and signed-in routing states;
   detailed feature flows belong in later decisions/features.
+- App colors, typography, spacing, and shape decisions are available through
+  centralized design-system/theme APIs; foundation screens contain no
+  arbitrary visual constants.
+- Initial shared button, text-field, and surface/card patterns used by
+  authentication and app-shell screens are provided by the design system.
+- App-shell layouts establish explicit responsive breakpoints/strategies, with
+  tablet landscape treated as the primary design target.
 - Foundation behavior has focused unit tests and relevant auth/network widget
   tests as part of implementation work, following `docs/testing.md`.
 

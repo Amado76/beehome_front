@@ -19,16 +19,18 @@ than device-local values.
   rules. Keep source identifiers and filenames in English, as required by the
   constitution.
 - Initial supported interface locales are Brazilian Portuguese (`pt-BR`),
-  English (`en`), and Spanish (`es`). Portuguese is the fallback when neither a
-  saved choice nor a supported device locale is available. An explicit saved
-  choice takes priority over the device locale.
+  English (`en`), Spanish (`es`), and Estonian (`et`, with `et-EE` regional
+  formatting). Portuguese is the fallback when neither a saved choice nor a
+  supported device locale is available. An explicit saved choice takes priority
+  over the device locale.
 - Store only the user's explicit locale override in simple preferences. If no
   override exists, resolve from the device's supported locale; do not persist a
   one-time device-derived choice.
-- Send `Accept-Language` on every API request using the resolved locale:
-  `pt-BR`, `en`, or `es`. This makes backend-owned errors/messages follow the
-  interface language. Never branch on translated backend text; use stable API
-  error codes.
+- Send `Accept-Language` on every API request. Map `pt-BR` to `pt`, `en` to
+  `en`, and `es` to `es`. The backend does not currently support Estonian, so
+  map `et` to `en` for backend-owned messages until its API localization adds
+  Estonian. Frontend-owned UI strings are translated in all four locales.
+  Never branch on translated backend text; use stable API error codes.
 - Localize all frontend-owned labels, validation, empty/loading/error states,
   accessibility labels, date/time labels, and plural forms. Do not translate
   user-authored content or API identifiers/enums.
@@ -59,7 +61,7 @@ localized generic UI failures.
 
 ## Initial implementation acceptance criteria
 
-- The root app registers the generated localization delegates and the three
+- The root app registers the generated localization delegates and all four
   supported locales.
 - Locale resolution follows saved override, supported device locale, then
   Portuguese fallback.
@@ -68,7 +70,7 @@ localized generic UI failures.
 - API requests send a matching `Accept-Language`, including regional Portuguese.
 - Date-only API fields remain unchanged across device timezone changes; family
   day boundaries use the family's IANA timezone.
-- All first-shell strings exist in all three locales; no user-facing string is
+- All first-shell strings exist in all four locales; no user-facing string is
   added inline in a feature view.
 
 ## References
