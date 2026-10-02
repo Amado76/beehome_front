@@ -8,6 +8,33 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/app_test_support.dart';
 
 void main() {
+  test('locale save failure stays in the shell and can be retried', () async {
+    final FailingSavePreferences preferences = FailingSavePreferences();
+    final AppServices app = services(
+      MemorySessionRepository(),
+      preferencesRepository: preferences,
+    );
+    final AppViewModel viewModel = AppViewModel(
+      services: app,
+      deviceLocales: () => [const Locale('en')],
+    );
+    addTearDown(app.dispose);
+    addTearDown(viewModel.dispose);
+    await viewModel.initialize();
+    await viewModel.selectLocale(const Locale('es'));
+    expect(viewModel.localeSaveFailed, isTrue);
+    expect(viewModel.localeSaving, isFalse);
+    expect(viewModel.state, AppViewState.signedOut);
+    expect(viewModel.locale, const Locale('en'));
+    expect(await preferences.locale(), isNull);
+    preferences.fail = false;
+    await viewModel.selectLocale(const Locale('es'));
+    expect(viewModel.localeSaveFailed, isFalse);
+    expect(viewModel.localeOverride, const Locale('es'));
+    expect(viewModel.locale, const Locale('es'));
+    expect(await preferences.locale(), 'es');
+  });
+
   test(
     'view model recovers from startup preference failure on retry',
     () async {

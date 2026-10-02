@@ -8,6 +8,57 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/app_test_support.dart';
 
 void main() {
+  testWidgets('language selector persists override and returns to device', (
+    WidgetTester tester,
+  ) async {
+    final AppServices app = services(MemorySessionRepository());
+    await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('language-selector')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Spanish').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Bienvenido a BeeHome'), findsOneWidget);
+    expect(await app.preferences.locale(), 'es');
+    expect(app.backendLanguage, 'es');
+    await tester.tap(find.byKey(const ValueKey('language-selector')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Usar idioma del dispositivo').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(await app.preferences.locale(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    app.dispose();
+  });
+
+  testWidgets('language save failure shows a localized recoverable message', (
+    WidgetTester tester,
+  ) async {
+    final FailingSavePreferences preferences = FailingSavePreferences();
+    final AppServices app = services(
+      MemorySessionRepository(),
+      preferencesRepository: preferences,
+    );
+    await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('language-selector')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Spanish').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(find.textContaining('Could not save your language'), findsOneWidget);
+    expect(find.textContaining('private storage'), findsNothing);
+    preferences.fail = false;
+    await tester.tap(find.byKey(const ValueKey('language-selector')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Spanish').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Bienvenido a BeeHome'), findsOneWidget);
+    expect(find.textContaining('Could not save your language'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+    app.dispose();
+  });
+
   testWidgets(
     'loading resolves to signed out without a fabricated login flow',
     (WidgetTester tester) async {
@@ -106,6 +157,15 @@ void main() {
       await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
       await tester.pumpAndSettle();
       expect(find.byKey(ValueKey(layout.$2)), findsOneWidget);
+      final Finder languageSelector = find.byKey(
+        const ValueKey('language-selector'),
+      );
+      if (layout.$1 < 600) {
+        expect(languageSelector, findsNothing);
+      } else {
+        expect(languageSelector, findsOneWidget);
+        expect(tester.getTopRight(languageSelector).dy, lessThan(80));
+      }
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       app.dispose();

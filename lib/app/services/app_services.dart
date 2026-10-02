@@ -20,6 +20,10 @@ class AppServices {
   final SessionService session;
   final void Function() _disposeResources;
   final ValueNotifier<Locale> locale = ValueNotifier(const Locale('pt', 'BR'));
+  Locale? _localeOverride;
+  List<Locale> _deviceLocales = [];
+
+  Locale? get localeOverride => _localeOverride;
 
   String get backendLanguage => switch (locale.value.languageCode) {
     'pt' => 'pt',
@@ -41,8 +45,27 @@ class AppServices {
   }
 
   Future<void> initialize(List<Locale> deviceLocales) async {
-    locale.value = resolveLocale(await preferences.locale(), deviceLocales);
+    _deviceLocales = List.of(deviceLocales);
+    final String? saved = await preferences.locale();
+    final String? language = saved?.replaceAll('_', '-').split('-').first;
+    _localeOverride = null;
+    for (final Locale supported in supportedLocales) {
+      if (supported.languageCode == language) _localeOverride = supported;
+    }
+    _resolveCurrentLocale();
     await session.restore();
+  }
+
+  void updateDeviceLocales(List<Locale> deviceLocales) {
+    _deviceLocales = List.of(deviceLocales);
+    _resolveCurrentLocale();
+  }
+
+  void _resolveCurrentLocale() {
+    locale.value = resolveLocale(
+      _localeOverride?.toLanguageTag(),
+      _deviceLocales,
+    );
   }
 
   Future<void> selectLocale(
@@ -52,8 +75,16 @@ class AppServices {
     if (selected != null && !supportedLocales.contains(selected)) {
       throw ArgumentError('Unsupported interface locale.');
     }
-    await preferences.setLocale(selected?.toLanguageTag());
-    locale.value = resolveLocale(selected?.toLanguageTag(), deviceLocales);
+    final Locale? previous = _localeOverride;
+    _localeOverride = selected;
+    updateDeviceLocales(deviceLocales);
+    try {
+      await preferences.setLocale(selected?.toLanguageTag());
+    } catch (_) {
+      _localeOverride = previous;
+      _resolveCurrentLocale();
+      rethrow;
+    }
   }
 
   void dispose() {

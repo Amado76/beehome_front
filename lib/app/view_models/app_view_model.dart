@@ -26,6 +26,8 @@ class AppViewModel extends ChangeNotifier {
   bool _initializing = false;
   bool _startupFailure = false;
   bool _disposed = false;
+  bool _localeSaving = false;
+  bool _localeSaveFailed = false;
   final Random _random = Random();
   Timer? _splashPhraseTimer;
   int _splashPhraseIndex = 0;
@@ -38,6 +40,29 @@ class AppViewModel extends ChangeNotifier {
       AppServices.resolveLocale(null, deviceLocales ?? []);
 
   Locale get locale => _services.locale.value;
+  Locale? get localeOverride => _services.localeOverride;
+  bool get localeSaving => _localeSaving;
+  bool get localeSaveFailed => _localeSaveFailed;
+
+  void updateDeviceLocales() {
+    if (_disposed) return;
+    _services.updateDeviceLocales(_deviceLocales());
+  }
+
+  Future<void> selectLocale(Locale? selected) async {
+    if (_disposed || _initializing || _localeSaving) return;
+    _localeSaving = true;
+    _localeSaveFailed = false;
+    _onServicesChanged();
+    try {
+      await _services.selectLocale(selected, _deviceLocales());
+    } catch (_) {
+      _localeSaveFailed = true;
+    } finally {
+      _localeSaving = false;
+      _onServicesChanged();
+    }
+  }
 
   AppViewState get state {
     if (_previewSplash) return AppViewState.loading;

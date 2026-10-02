@@ -20,5 +20,12 @@
   "splashReady": "Tudo pronto com amor!",
   "splashHoney": "Produzindo um pouco de mel...",
   "splashFooter": "homeschool & rotina",
-  "splashFooterCaption": "Um lar para suas memórias"
+  "splashFooterCaption": "Um lar para suas memórias",
+  "language": "Idioma",
+  "deviceLanguage": "Usar idioma do dispositivo",
+  "languagePortuguese": "Português (Brasil)",
+  "languageEnglish": "Inglês",
+  "languageSpanish": "Espanhol",
+  "languageEstonian": "Estoniano",
+  "languageSaveError": "Não foi possível salvar o idioma. Selecione novamente para tentar de novo."
 }

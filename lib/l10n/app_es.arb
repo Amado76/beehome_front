@@ -20,5 +20,12 @@
   "splashReady": "¡Todo listo con amor!",
   "splashHoney": "Produciendo un poquito de miel...",
   "splashFooter": "educación en casa y rutinas",
-  "splashFooterCaption": "Un hogar para tus recuerdos"
+  "splashFooterCaption": "Un hogar para tus recuerdos",
+  "language": "Idioma",
+  "deviceLanguage": "Usar idioma del dispositivo",
+  "languagePortuguese": "Portugués (Brasil)",
+  "languageEnglish": "Inglés",
+  "languageSpanish": "Español",
+  "languageEstonian": "Estonio",
+  "languageSaveError": "No se pudo guardar el idioma. Selecciónalo de nuevo para reintentar."
 }

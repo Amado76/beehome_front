@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../design_system/theme/app_tokens.dart';
 
-// Presentation values selected once, shared by the splash components.
+// Centralizes responsive sizes and styles shared by the splash components.
 class SplashLayout {
   const SplashLayout({
     this.frameInset = 0,
@@ -56,6 +56,7 @@ class SplashLayout {
     showFlightTrail: false,
   );
 
+  // Mobile uses compact; tablet and desktop/web share the notebook style.
   static SplashLayout forWidth(double width) => switch (width) {
     < AppLayout.tablet => compact,
     _ => notebook,
@@ -79,7 +80,7 @@ class SplashLayout {
   final bool showFlightTrail;
 
   Size canvasSize(Size available) {
-    // Keep notebook margins proportional without wasting space on wide screens.
+    // Keeps notebook margins proportional, capped at 64.
     final double inset = frameInset == 0
         ? 0
         : (available.shortestSide * .04).clamp(frameInset, 64).toDouble();

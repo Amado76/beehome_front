@@ -53,6 +53,26 @@ class DelayedLocalePreferences extends MemoryAppPreferencesRepository {
   Future<String?> locale() => restored.future;
 }
 
+class DelayedSavePreferences extends MemoryAppPreferencesRepository {
+  final Completer<void> saved = Completer<void>();
+
+  @override
+  Future<void> setLocale(String? value) async {
+    await saved.future;
+    await super.setLocale(value);
+  }
+}
+
+class FailingSavePreferences extends MemoryAppPreferencesRepository {
+  bool fail = true;
+
+  @override
+  Future<void> setLocale(String? value) async {
+    if (fail) throw StateError('private storage details');
+    await super.setLocale(value);
+  }
+}
+
 class FakeApiClient implements ApiClient {
   bool closed = false;
 

@@ -74,4 +74,26 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get splashFooterCaption => 'Kodu sinu mälestustele';
+
+  @override
+  String get language => 'Keel';
+
+  @override
+  String get deviceLanguage => 'Kasuta seadme keelt';
+
+  @override
+  String get languagePortuguese => 'Portugali (Brasiilia)';
+
+  @override
+  String get languageEnglish => 'Inglise';
+
+  @override
+  String get languageSpanish => 'Hispaania';
+
+  @override
+  String get languageEstonian => 'Eesti';
+
+  @override
+  String get languageSaveError =>
+      'Keele salvestamine ebaõnnestus. Uuesti proovimiseks vali keel uuesti.';
 }

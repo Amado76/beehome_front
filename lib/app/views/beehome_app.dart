@@ -41,7 +41,9 @@ class BeeHomeApp extends StatelessWidget {
                 title: strings.sessionError,
                 message: strings.sessionErrorMessage,
                 action: FilledButton(
-                  onPressed: viewModel.initialize,
+                  onPressed: viewModel.localeSaving
+                      ? null
+                      : viewModel.initialize,
                   child: Text(strings.retry),
                 ),
               );
@@ -60,16 +62,98 @@ class BeeHomeApp extends StatelessWidget {
                 message: strings.signedOutMessage,
               );
           }
-          return FoundationLayout(panel: panel);
+          return FoundationLayout(
+            panel: panel,
+            languageSelector: _LanguageSelector(viewModel: viewModel),
+          );
         },
       ),
     ),
   );
 }
 
+class _LanguageSelector extends StatelessWidget {
+  const _LanguageSelector({required this.viewModel});
+
+  final AppViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations strings = AppLocalizations.of(context)!;
+    final List<(String, String, String)> languages = [
+      ('', '🌐', strings.deviceLanguage),
+      ('pt-BR', '🇧🇷', strings.languagePortuguese),
+      ('en', '🇬🇧', strings.languageEnglish),
+      ('es', '🇪🇸', strings.languageSpanish),
+      ('et', '🇪🇪', strings.languageEstonian),
+    ];
+    final (String, String, String) current = languages.firstWhere(
+      ((String, String, String) language) =>
+          language.$1 == viewModel.locale.toLanguageTag(),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        PopupMenuButton<String>(
+          key: const ValueKey('language-selector'),
+          tooltip: '${strings.language}: ${current.$3}',
+          enabled: !viewModel.localeSaving,
+          icon: ExcludeSemantics(child: Text(current.$2)),
+          onSelected: (String tag) => viewModel.selectLocale(
+            tag.isEmpty
+                ? null
+                : AppViewModel.supportedLocales.firstWhere(
+                    (Locale locale) => locale.toLanguageTag() == tag,
+                  ),
+          ),
+          itemBuilder: (BuildContext context) => [
+            for (final (String, String, String) language in languages)
+              CheckedPopupMenuItem<String>(
+                value: language.$1,
+                checked:
+                    language.$1 ==
+                    (viewModel.localeOverride?.toLanguageTag() ?? ''),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ExcludeSemantics(child: Text(language.$2)),
+                    const SizedBox(width: AppSpacing.small),
+                    Flexible(child: Text(language.$3)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        if (viewModel.localeSaving) ...[
+          const SizedBox(height: AppSpacing.small),
+          const SizedBox(width: 48, child: LinearProgressIndicator()),
+        ],
+        if (viewModel.localeSaveFailed) ...[
+          const SizedBox(height: AppSpacing.small),
+          Semantics(
+            liveRegion: true,
+            child: Text(
+              strings.languageSaveError,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 class FoundationLayout extends StatelessWidget {
-  const FoundationLayout({required this.panel, super.key});
+  const FoundationLayout({
+    required this.panel,
+    this.languageSelector,
+    super.key,
+  });
   final Widget panel;
+  final Widget? languageSelector;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -90,6 +174,7 @@ class FoundationLayout extends StatelessWidget {
             ],
           );
           final Widget content;
+          // Mobile stacks the brand and panel; tablet and desktop use two columns.
           if (constraints.maxWidth < AppLayout.tablet) {
             content = Column(
               key: const ValueKey('mobile-shell'),
@@ -123,16 +208,39 @@ class FoundationLayout extends StatelessWidget {
               ],
             );
           }
-          return Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.large),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: AppLayout.contentWidth,
+          return Column(
+            children: [
+              if (constraints.maxWidth >= AppLayout.tablet &&
+                  languageSelector != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.large,
+                    vertical: AppSpacing.small,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: AppLayout.formWidth,
+                      ),
+                      child: languageSelector!,
+                    ),
+                  ),
                 ),
-                child: content,
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppSpacing.large),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: AppLayout.contentWidth,
+                      ),
+                      child: content,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           );
         },
       ),

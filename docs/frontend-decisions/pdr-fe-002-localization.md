@@ -73,6 +73,27 @@ localized generic UI failures.
 - All first-shell strings exist in all four locales; no user-facing string is
   added inline in a feature view.
 
+## Implementation progress
+
+### Interface language — 2026-10-01
+
+- Tablet and desktop/Web layouts (at least 600 logical pixels wide) provide a
+  compact flag menu at the top right for all four locales and an option to
+  follow the device language. Mobile language selection belongs exclusively
+  in Settings, which has not been implemented yet; the mobile shell has no
+  language selector.
+- Explicit choices update the interface immediately and are stored as language
+  tags. Returning to the device language removes the stored override. Device
+  locale changes are observed while the app runs and respect explicit overrides.
+- A failed preference write restores the previous choice and displays a
+  localized message inviting the user to select the language again.
+- Tests cover resolution, regional override restoration, persistence and
+  removal, device changes, save failure and retry, shell interaction, and the
+  API client's use of the current backend language on each request.
+- Remaining work: regional date/time formatting (including `et-EE`), date-only
+  values, family IANA timezone boundaries and wall times, explicit instant
+  display timezone handling, and plural resources when count-based UI is added.
+
 ## References
 
 - [Product overview](../product-overview.md)

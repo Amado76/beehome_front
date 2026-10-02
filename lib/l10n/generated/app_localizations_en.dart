@@ -73,4 +73,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get splashFooterCaption => 'A home for your memories';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get deviceLanguage => 'Use device language';
+
+  @override
+  String get languagePortuguese => 'Portuguese (Brazil)';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSpanish => 'Spanish';
+
+  @override
+  String get languageEstonian => 'Estonian';
+
+  @override
+  String get languageSaveError =>
+      'Could not save your language. Please select it again to retry.';
 }

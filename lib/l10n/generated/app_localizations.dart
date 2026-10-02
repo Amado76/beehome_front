@@ -227,6 +227,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A home for your memories'**
   String get splashFooterCaption;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @deviceLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use device language'**
+  String get deviceLanguage;
+
+  /// No description provided for @languagePortuguese.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese (Brazil)'**
+  String get languagePortuguese;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageSpanish;
+
+  /// No description provided for @languageEstonian.
+  ///
+  /// In en, this message translates to:
+  /// **'Estonian'**
+  String get languageEstonian;
+
+  /// No description provided for @languageSaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save your language. Please select it again to retry.'**
+  String get languageSaveError;
 }
 
 class _AppLocalizationsDelegate

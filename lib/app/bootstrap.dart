@@ -26,13 +26,14 @@ class _AppRoot extends StatefulWidget {
   State<_AppRoot> createState() => _AppRootState();
 }
 
-class _AppRootState extends State<_AppRoot> {
+class _AppRootState extends State<_AppRoot> with WidgetsBindingObserver {
   late final AppViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
     _viewModel = widget.container<AppViewModel>();
+    WidgetsBinding.instance.addObserver(this);
     unawaited(_viewModel.initialize());
   }
 
@@ -40,7 +41,13 @@ class _AppRootState extends State<_AppRoot> {
   Widget build(BuildContext context) => BeeHomeApp(viewModel: _viewModel);
 
   @override
+  void didChangeLocales(List<Locale>? locales) {
+    _viewModel.updateDeviceLocales();
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _viewModel.dispose();
     unawaited(widget.container.reset());
     super.dispose();

@@ -20,5 +20,12 @@
   "splashReady": "Kõik on armastusega valmis!",
   "splashHoney": "Valmistame veidi mett...",
   "splashFooter": "koduõpe ja päevakava",
-  "splashFooterCaption": "Kodu sinu mälestustele"
+  "splashFooterCaption": "Kodu sinu mälestustele",
+  "language": "Keel",
+  "deviceLanguage": "Kasuta seadme keelt",
+  "languagePortuguese": "Portugali (Brasiilia)",
+  "languageEnglish": "Inglise",
+  "languageSpanish": "Hispaania",
+  "languageEstonian": "Eesti",
+  "languageSaveError": "Keele salvestamine ebaõnnestus. Uuesti proovimiseks vali keel uuesti."
 }

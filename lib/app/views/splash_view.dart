@@ -59,6 +59,7 @@ class _SplashViewState extends State<SplashView>
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
+            // Selects the style by width and passes it to the header, hero, and footer.
             final SplashLayout layout = SplashLayout.forWidth(
               constraints.maxWidth,
             );

@@ -30,6 +30,8 @@ abstract final class AppShape {
 }
 
 abstract final class AppLayout {
+  // Logical widths: mobile < 600, tablet < 1200, and desktop >= 1200.
+  // Web follows the window width, regardless of platform.
   static const double tablet = 600;
   static const double desktop = 1200;
   static const double formWidth = 440;

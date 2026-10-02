@@ -20,5 +20,12 @@
   "splashReady": "All ready with love!",
   "splashHoney": "Making a little honey...",
   "splashFooter": "homeschool & routines",
-  "splashFooterCaption": "A home for your memories"
+  "splashFooterCaption": "A home for your memories",
+  "language": "Language",
+  "deviceLanguage": "Use device language",
+  "languagePortuguese": "Portuguese (Brazil)",
+  "languageEnglish": "English",
+  "languageSpanish": "Spanish",
+  "languageEstonian": "Estonian",
+  "languageSaveError": "Could not save your language. Please select it again to retry."
 }

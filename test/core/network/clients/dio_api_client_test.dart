@@ -50,6 +50,7 @@ void main() {
   late Dio dio;
   late MemorySessionRepository store;
   late MemoryAppPreferencesRepository preferences;
+  late String language;
 
   setUp(() async {
     store = MemorySessionRepository();
@@ -57,11 +58,12 @@ void main() {
     session = SessionService(store, preferences);
     await session.replace(const SessionTokens('old-access', 'old-refresh'));
     dio = Dio();
+    language = 'pt';
     api = DioApiClient(
       dio: dio,
       config: AppConfig.parse('https://example.com'),
       session: session,
-      language: () => 'pt',
+      language: () => language,
       refreshTokens: (String token) =>
           RemoteAuthenticationRepository(api).refresh(token),
     );
@@ -90,12 +92,28 @@ void main() {
       '/api/health',
     ]) {
       await api.request(path);
+      expect(adapter.requests.last.headers['Accept-Language'], 'pt');
       expect(
         adapter.requests.last.headers.containsKey('Authorization'),
         isFalse,
       );
     }
     expect(adapter.requests.last.headers['Accept-Language'], 'pt');
+  });
+
+  test('each request uses the current backend language', () async {
+    final FakeAdapter adapter = FakeAdapter(
+      (RequestOptions options) async => jsonBody(200, {}),
+    );
+    dio.httpClientAdapter = adapter;
+    await api.request('/api/users/me');
+    expect(adapter.requests.last.headers['Accept-Language'], 'pt');
+    language = 'es';
+    await api.request('/api/health');
+    expect(adapter.requests.last.headers['Accept-Language'], 'es');
+    language = 'en';
+    await api.request('/api/users/me');
+    expect(adapter.requests.last.headers['Accept-Language'], 'en');
   });
 
   test('204 and empty successes do not require JSON', () async {
