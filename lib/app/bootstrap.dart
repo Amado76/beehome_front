@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
-import 'di/dependencies.dart';
+import 'dependency_injection/dependencies.dart';
 import 'view_models/app_view_model.dart';
 import 'views/beehome_app.dart';
 

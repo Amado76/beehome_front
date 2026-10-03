@@ -6,6 +6,8 @@ import '../../design_system/theme/app_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../view_models/app_view_model.dart';
 import 'splash_view.dart';
+import '../../features/authentication/views/authentication_view.dart';
+import '../../features/authentication/view_models/authentication_view_model.dart';
 
 class BeeHomeApp extends StatelessWidget {
   const BeeHomeApp({
@@ -21,6 +23,7 @@ class BeeHomeApp extends StatelessWidget {
     listenable: viewModel,
     builder: (BuildContext context, Widget? child) => MaterialApp(
       title: 'BeeHome',
+      initialRoute: '/',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       locale: viewModel.locale,
@@ -48,18 +51,39 @@ class BeeHomeApp extends StatelessWidget {
                 ),
               );
             case AppViewState.signedIn:
+              if (viewModel.authentication.mode == AuthMode.changePassword) {
+                return AuthenticationView(
+                  viewModel: viewModel.authentication,
+                  languageSelector: _LanguageSelector(viewModel: viewModel),
+                );
+              }
               panel = FoundationPanel(
                 title: strings.workspace,
                 message: strings.signedInMessage,
-                action: FilledButton(
-                  onPressed: viewModel.signOut,
-                  child: Text(strings.signOut),
+                action: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: viewModel.authentication.busy
+                          ? null
+                          : () => viewModel.authentication.selectMode(
+                              AuthMode.changePassword,
+                            ),
+                      child: Text(strings.authChange),
+                    ),
+                    FilledButton(
+                      onPressed: viewModel.authentication.busy
+                          ? null
+                          : viewModel.signOut,
+                      child: Text(strings.signOut),
+                    ),
+                  ],
                 ),
               );
             case AppViewState.signedOut:
-              panel = FoundationPanel(
-                title: strings.welcome,
-                message: strings.signedOutMessage,
+              return AuthenticationView(
+                viewModel: viewModel.authentication,
+                languageSelector: _LanguageSelector(viewModel: viewModel),
               );
           }
           return FoundationLayout(

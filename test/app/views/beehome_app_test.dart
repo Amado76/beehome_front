@@ -8,6 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/app_test_support.dart';
 
 void main() {
+  setUp(() {
+    final TestWidgetsFlutterBinding binding =
+        TestWidgetsFlutterBinding.ensureInitialized();
+    binding.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(binding.platformDispatcher.clearAccessibilityFeaturesTestValue);
+  });
   testWidgets('language selector persists override and returns to device', (
     WidgetTester tester,
   ) async {
@@ -18,14 +25,20 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Spanish').last);
     await tester.pumpAndSettle();
-    expect(find.text('Bienvenido a BeeHome'), findsOneWidget);
+    expect(
+      find.text('Tu rincón de estudios y rutina familiar'),
+      findsOneWidget,
+    );
     expect(await app.preferences.locale(), 'es');
     expect(app.backendLanguage, 'es');
     await tester.tap(find.byKey(const ValueKey('language-selector')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Usar idioma del dispositivo').last);
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
     expect(await app.preferences.locale(), isNull);
     await tester.pumpWidget(const SizedBox());
     app.dispose();
@@ -45,7 +58,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Spanish').last);
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
     expect(find.textContaining('Could not save your language'), findsOneWidget);
     expect(find.textContaining('private storage'), findsNothing);
     preferences.fail = false;
@@ -53,26 +69,31 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Spanish').last);
     await tester.pumpAndSettle();
-    expect(find.text('Bienvenido a BeeHome'), findsOneWidget);
+    expect(
+      find.text('Tu rincón de estudios y rutina familiar'),
+      findsOneWidget,
+    );
     expect(find.textContaining('Could not save your language'), findsNothing);
     await tester.pumpWidget(const SizedBox());
     app.dispose();
   });
 
-  testWidgets(
-    'loading resolves to signed out without a fabricated login flow',
-    (WidgetTester tester) async {
-      final DelayedSessionRepository store = DelayedSessionRepository();
-      final AppServices app = services(store);
-      await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
-      expect(find.byType(SplashView), findsOneWidget);
-      store.restored.complete(null);
-      await tester.pumpAndSettle();
-      expect(find.text('Welcome to BeeHome'), findsOneWidget);
-      await tester.pumpWidget(const SizedBox());
-      app.dispose();
-    },
-  );
+  testWidgets('loading resolves to the authentication form', (
+    WidgetTester tester,
+  ) async {
+    final DelayedSessionRepository store = DelayedSessionRepository();
+    final AppServices app = services(store);
+    await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
+    expect(find.byType(SplashView), findsOneWidget);
+    store.restored.complete(null);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
+    await tester.pumpWidget(const SizedBox());
+    app.dispose();
+  });
 
   testWidgets('restored session shows workspace and local sign-out', (
     WidgetTester tester,
@@ -85,7 +106,10 @@ void main() {
     expect(find.text('Your workspace'), findsOneWidget);
     await tester.tap(find.text('Sign out on this device'));
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
     expect(await store.read(), isNull);
     await tester.pumpWidget(const SizedBox());
     app.dispose();
@@ -117,7 +141,10 @@ void main() {
     store.failDeletion = false;
     await tester.tap(find.text('Try again'));
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
     expect(await store.read(), isNull);
     expect(store.deletionAttempts, 3);
     await tester.pumpWidget(const SizedBox());
@@ -136,7 +163,10 @@ void main() {
     store.fail = false;
     await tester.tap(find.text('Try again'));
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to BeeHome'), findsOneWidget);
+    expect(
+      find.text('Your cozy corner for studies and family routines'),
+      findsOneWidget,
+    );
     await tester.pumpWidget(const SizedBox());
     app.dispose();
   });
@@ -153,7 +183,9 @@ void main() {
       tester.view.physicalSize = Size(layout.$1, 800);
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
-      final AppServices app = services(MemorySessionRepository());
+      final MemorySessionRepository store = MemorySessionRepository();
+      await store.write(const SessionTokens('access', 'refresh'));
+      final AppServices app = services(store);
       await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
       await tester.pumpAndSettle();
       expect(find.byKey(ValueKey(layout.$2)), findsOneWidget);
@@ -179,11 +211,17 @@ void main() {
       await app.preferences.setLocale('et');
       await tester.pumpWidget(BeeHomeApp(viewModel: viewModelFor(app)));
       await tester.pumpAndSettle();
-      expect(find.text('Tere tulemast BeeHome’i'), findsOneWidget);
+      expect(
+        find.text('Sinu hubane õpingute ja pere argipäeva paik'),
+        findsOneWidget,
+      );
       expect(app.backendLanguage, 'en');
       await app.selectLocale(const Locale('pt', 'BR'), [const Locale('en')]);
       await tester.pumpAndSettle();
-      expect(find.text('Boas-vindas ao BeeHome'), findsOneWidget);
+      expect(
+        find.text('Seu cantinho de estudos e rotina familiar'),
+        findsOneWidget,
+      );
       expect(app.backendLanguage, 'pt');
       await tester.pumpWidget(const SizedBox());
       app.dispose();

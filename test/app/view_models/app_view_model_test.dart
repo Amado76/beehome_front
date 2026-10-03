@@ -1,3 +1,4 @@
+import '../../features/authentication/support/fake_accounts.dart';
 import 'package:beehome/app/services/app_services.dart';
 import 'package:beehome/app/view_models/app_view_model.dart';
 import 'package:beehome/core/auth/repos/local_session_repository.dart';
@@ -17,6 +18,7 @@ void main() {
     final AppViewModel viewModel = AppViewModel(
       services: app,
       deviceLocales: () => [const Locale('en')],
+      authenticationRepository: FakeAccounts(),
     );
     addTearDown(app.dispose);
     addTearDown(viewModel.dispose);
@@ -46,6 +48,7 @@ void main() {
       final AppViewModel viewModel = AppViewModel(
         services: app,
         deviceLocales: () => [const Locale('en')],
+        authenticationRepository: FakeAccounts(),
       );
       addTearDown(app.dispose);
       addTearDown(viewModel.dispose);
@@ -68,6 +71,7 @@ void main() {
     final AppViewModel viewModel = AppViewModel(
       services: app,
       deviceLocales: () => [const Locale('en')],
+      authenticationRepository: FakeAccounts(),
     );
     addTearDown(app.dispose);
     int notifications = 0;

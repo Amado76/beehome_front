@@ -297,7 +297,7 @@ class _SplashViewState extends State<SplashView>
           );
         },
         child: Image.asset(
-          'assets/mascote.png',
+          'assets/mascote_splash.png',
           width: layout.mascotWidth,
           height: layout.mascotHeight - 20,
           fit: BoxFit.contain,

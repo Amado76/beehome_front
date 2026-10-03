@@ -35,8 +35,8 @@ ViewModels and services receive the contracts they need; remote repositories
 receive `ApiClient`; local repositories receive their database or storage plugin
 when applicable. Consumers must not construct concrete infrastructure dependencies.
 
-Register production implementations with GetIt in `app/di/dependencies.dart`,
-with separate core and application registration modules in `app/di/modules/`.
+Register production implementations with GetIt in `app/dependency_injection/dependencies.dart`,
+with separate core and application registration modules in `app/dependency_injection/modules/`.
 Future features should add their own registration modules rather than extend
 `AppServices` into a container of unrelated dependencies. Container access stays
 at composition boundaries; Views, ViewModels, services, and repositories retain
@@ -61,7 +61,7 @@ Use Flutter's native `ChangeNotifier`, `ListenableBuilder`, and `ValueListenable
 ## Networking and persistence
 
 - Use Dio for HTTP. Centralize shared configuration such as base URL, headers, authentication, timeouts, and error handling in the API client layer.
-- Repositories depend on the `ApiClient` contract. Keep Dio configuration and transport error mapping in `DioApiClient`; register production dependencies in `app/di/`. Session renewal calls the injected authentication repository operation; the transport does not own the refresh endpoint or response mapping.
+- Repositories depend on the `ApiClient` contract. Keep Dio configuration and transport error mapping in `DioApiClient`; register production dependencies in `app/dependency_injection/`. Session renewal calls the injected authentication repository operation; the transport does not own the refresh endpoint or response mapping.
 - Never call Dio from a View or expose credentials in source code.
 - Name repository implementations by their data access: `LocalSessionRepository`, `LocalAppPreferencesRepository`, and `RemoteAuthenticationRepository`. Local repositories directly own database, secure-storage, or preferences calls; remote repositories directly own endpoint calls and response-to-model mapping through `ApiClient`. Keep memory implementations replaceable through the same local repository contracts.
 - Do not add `sources/`, data-source adapters, or wrappers that only delegate to another storage abstraction. The repository is the data-access boundary for the current architecture.
@@ -97,7 +97,7 @@ directories. The current foundation is organized as follows:
 lib/
   app/
     bootstrap.dart        # startup and root lifecycle
-    di/
+    dependency_injection/
       dependencies.dart   # registration entry point
       modules/            # core, application, and future feature registrations
     services/

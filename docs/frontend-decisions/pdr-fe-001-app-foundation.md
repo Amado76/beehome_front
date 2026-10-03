@@ -24,7 +24,7 @@ feature subdirectories as a feature needs them.
 lib/
   app/
     bootstrap.dart        # startup and root lifecycle
-    di/                   # GetIt registrations, grouped by module
+    dependency_injection/ # GetIt registrations, grouped by module
     services/
     view_models/
     views/
@@ -58,7 +58,7 @@ Keep the existing feature flow proportional to complexity:
 Within both `core/` and `features/`, group by feature before layer. Repositories
 for local and remote data stay separate within their feature's `repos/` directory.
 Tests mirror the feature and layer structure.
-Use `ChangeNotifier` and Flutter listenable builders by default. Use GetIt to register shared dependencies and ViewModel factories in `app/di/`.
+Use `ChangeNotifier` and Flutter listenable builders by default. Use GetIt to register shared dependencies and ViewModel factories in `app/dependency_injection/`.
 Keep constructor injection in consumers and container access at composition
 boundaries. The app root disposes its ViewModel before resetting the container;
 `AppServices` owns the shared session and API client disposal. Do not add a router,

@@ -17,6 +17,23 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
+  <meta name="referrer" content="no-referrer">
+  <script>
+    // Consume reset secrets before Flutter or any other resource initializes.
+    (() => {
+      const url = new URL(window.location.href);
+      const hashRoute = url.hash.startsWith('#/') ? new URL(url.hash.slice(1), url.origin) : null;
+      const route = hashRoute || url;
+      window.beehomeResetLink = route.pathname.endsWith('/reset-password');
+      window.beehomeResetToken = window.beehomeResetLink ? route.searchParams.get('token') : null;
+      if (window.beehomeResetLink && route.searchParams.has('token')) {
+        route.searchParams.delete('token');
+        if (hashRoute) url.hash = route.pathname + route.search;
+        history.replaceState(null, '', url.pathname + url.search + url.hash);
+      }
+    })();
+  </script>
+  <link rel="preload" href="assets/assets/mascote_splash.png" as="fetch" type="image/png" crossorigin fetchpriority="high">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 

@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 import '../services/app_services.dart';
+import '../../core/auth/repos/remote_authentication_repository.dart';
+import '../../features/authentication/view_models/authentication_view_model.dart';
 import '../../core/auth/services/session_service.dart';
 
 enum AppViewState { loading, signedOut, signedIn, failure }
@@ -13,16 +15,29 @@ class AppViewModel extends ChangeNotifier {
     required AppServices services,
     required List<Locale> Function() deviceLocales,
     bool previewSplash = false,
+    Duration minimumSplashDuration = Duration.zero,
+    required UserAuthenticationRepository authenticationRepository,
+    String? resetToken,
+    bool resetLink = false,
   }) : _services = services,
        _deviceLocales = deviceLocales,
+       _minimumSplashDuration = minimumSplashDuration,
        _previewSplash = previewSplash {
+    authentication = AuthenticationViewModel(
+      repository: authenticationRepository,
+      session: services.session,
+      resetToken: resetToken,
+      resetLink: resetLink,
+    )..addListener(_onServicesChanged);
     _services.session.addListener(_onServicesChanged);
     _services.locale.addListener(_onServicesChanged);
   }
 
+  late final AuthenticationViewModel authentication;
   final AppServices _services;
   final List<Locale> Function() _deviceLocales;
   final bool _previewSplash;
+  final Duration _minimumSplashDuration;
   bool _initializing = false;
   bool _startupFailure = false;
   bool _disposed = false;
@@ -66,8 +81,8 @@ class AppViewModel extends ChangeNotifier {
 
   AppViewState get state {
     if (_previewSplash) return AppViewState.loading;
-    if (_startupFailure) return AppViewState.failure;
     if (_initializing) return AppViewState.loading;
+    if (_startupFailure) return AppViewState.failure;
     return switch (_services.session.state) {
       SessionState.loading => AppViewState.loading,
       SessionState.signedOut => AppViewState.signedOut,
@@ -80,12 +95,20 @@ class AppViewModel extends ChangeNotifier {
     if (_disposed || _initializing) return;
     _initializing = true;
     _startupFailure = false;
+    // Run the minimum display time alongside startup, without delaying slow loads.
+    final Future<void> minimumDisplay = _minimumSplashDuration == Duration.zero
+        ? Future<void>.value()
+        : Future<void>.delayed(_minimumSplashDuration);
     _onServicesChanged();
     try {
-      await _services.initialize(_deviceLocales());
+      await _services.initialize(
+        _deviceLocales(),
+        restoreSession: authentication.mode != AuthMode.resetPassword,
+      );
     } catch (_) {
       _startupFailure = true;
     } finally {
+      await minimumDisplay;
       _initializing = false;
       _onServicesChanged();
     }
@@ -93,11 +116,7 @@ class AppViewModel extends ChangeNotifier {
 
   Future<void> signOut() async {
     if (_disposed) return;
-    try {
-      await _services.session.clear();
-    } catch (_) {
-      // SessionService exposes persistence failures through its state.
-    }
+    await authentication.signOut();
   }
 
   void _onServicesChanged() {
@@ -123,6 +142,8 @@ class AppViewModel extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     _splashPhraseTimer?.cancel();
+    authentication.removeListener(_onServicesChanged);
+    authentication.dispose();
     _services.session.removeListener(_onServicesChanged);
     _services.locale.removeListener(_onServicesChanged);
     super.dispose();

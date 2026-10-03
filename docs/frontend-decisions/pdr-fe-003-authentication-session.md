@@ -19,9 +19,12 @@ issue no replacement credentials.
   stored session exists. A successful refresh can precede that call when the
   access token is expired. Do not treat cached user data or a family selection
   as proof of authentication.
-- Use email/password forms for the initial release. Do not expose Google/Apple
-  sign-in, account linking, verification, profile editing, or logout-all until
-  those flows exist in the backend contract.
+- Use email/password forms for authentication in the initial release. As requested
+  on 2026-10-01, show Google/Apple buttons on mobile, tablet, and Web to match
+  the supplied design. Until provider APIs are documented, tapping them shows
+  localized coming-soon feedback and keeps email/password available. Do not
+  implement provider authentication, account linking, verification, profile
+  editing, or logout-all without a backend contract.
 - Registration success leads to the login screen with the entered email
   prefilled; it does not imply the account is signed in. Login shows one generic
   credential error for `INVALID_CREDENTIALS`, including accounts without a
@@ -80,3 +83,32 @@ browser persistence has a separate security decision.
 - [Authentication API contract](../backend-api/authentication.md)
 - [App foundation decision](pdr-fe-001-app-foundation.md)
 - [Localization decision](pdr-fe-002-localization.md)
+
+## Implementation progress — 2026-10-01
+
+- Email/password login, registration, recovery, reset, password change, and
+  session logout now call the documented API through the authentication
+  repository. Registration returns to login with the email prefilled.
+- Production sessions load `/api/users/me` before becoming signed in. Restoration
+  and login are guarded against newer session changes; safe-request renewal
+  continues to use the existing bounded, single-flight implementation.
+- The authentication ViewModel owns validation, loading, stable-code errors,
+  localized backend field feedback, and the `Retry-After` cooldown. Passwords
+  remain unchanged. Ambiguous password changes return to login without retry.
+- Native devices can remember access in secure storage; an unchecked option
+  retains credentials only in memory, including after renewal. Web keeps the
+  memory-only policy and does not expose the remember-device option. Provider
+  buttons are visual entry points with coming-soon feedback only.
+- The notebook login design uses the local mascot and fonts, compact mobile
+  composition, two-column tablet composition, and a full-window Web canvas.
+  Forms remain scrollable with the keyboard and enlarged text. Tablet/Web
+  retain language selection; mobile uses the resolved interface language.
+- Web `/reset-password?token=...` (or its hash-route equivalent) removes the
+  secret with `history.replaceState` before Flutter starts. The document sets
+  `no-referrer`; the token is consumed once into the reset ViewModel and is
+  cleared on success or disposal. The host must serve `index.html` for the
+  direct reset path and preserve the no-referrer policy.
+- Tests cover repository payloads, session verification/races, credential
+  errors, password rules, registration/recovery/reset/change/logout behavior,
+  and responsive form interaction. Live API, SMTP delivery, hosting rewrites,
+  and native secure-storage integration still require environment validation.

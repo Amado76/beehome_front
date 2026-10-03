@@ -1,7 +1,9 @@
+import '../../features/authentication/support/fake_accounts.dart';
 import 'package:beehome/app/services/app_services.dart';
 import 'package:beehome/app/view_models/app_view_model.dart';
 import 'package:beehome/app/views/beehome_app.dart';
 import 'package:beehome/app/views/splash_view.dart';
+import 'package:beehome/core/auth/repos/local_session_repository.dart';
 import 'package:beehome/design_system/theme/app_theme.dart';
 import 'package:beehome/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/app_test_support.dart';
 
 void main() {
+  setUp(() {
+    final TestWidgetsFlutterBinding binding =
+        TestWidgetsFlutterBinding.ensureInitialized();
+    binding.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(binding.platformDispatcher.clearAccessibilityFeaturesTestValue);
+  });
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
     for (final String family in [
@@ -26,6 +35,56 @@ void main() {
       'SpaceMono',
     )..addFont(rootBundle.load('assets/fonts/SpaceMono/SpaceMono-Regular.ttf'));
     await journal.load();
+  });
+
+  testWidgets(
+    'fast startup keeps the splash visible for its minimum duration',
+    (WidgetTester tester) async {
+      final AppServices app = services(MemorySessionRepository());
+      final AppViewModel viewModel = AppViewModel(
+        services: app,
+        deviceLocales: () => [const Locale('pt')],
+        minimumSplashDuration: const Duration(milliseconds: 1500),
+        authenticationRepository: FakeAccounts(),
+      );
+      addTearDown(viewModel.dispose);
+      addTearDown(app.dispose);
+      final Future<void> startup = viewModel.initialize();
+      await tester.pumpWidget(BeeHomeApp(viewModel: viewModel));
+      await tester.pump(const Duration(milliseconds: 1499));
+      expect(find.byType(SplashView), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 1));
+      await startup;
+      await tester.pumpAndSettle();
+      expect(find.byType(SplashView), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('slow startup does not add the minimum duration after loading', (
+    WidgetTester tester,
+  ) async {
+    final DelayedSessionRepository repository = DelayedSessionRepository();
+    final AppServices app = services(repository);
+    final AppViewModel viewModel = AppViewModel(
+      services: app,
+      deviceLocales: () => [const Locale('pt')],
+      minimumSplashDuration: const Duration(milliseconds: 1500),
+      authenticationRepository: FakeAccounts(),
+    );
+    addTearDown(viewModel.dispose);
+    addTearDown(app.dispose);
+    final Future<void> startup = viewModel.initialize();
+    await tester.pumpWidget(BeeHomeApp(viewModel: viewModel));
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.byType(SplashView), findsOneWidget);
+    repository.restored.complete(null);
+    await tester.pump();
+    await startup;
+    expect(viewModel.state, AppViewState.signedOut);
+    await tester.pumpAndSettle();
+    expect(find.byType(SplashView), findsNothing);
+    await tester.pumpWidget(const SizedBox());
   });
 
   for (final (String, String) translation in [

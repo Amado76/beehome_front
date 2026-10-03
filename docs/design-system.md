@@ -82,3 +82,22 @@ presentation once from the available width. The notebook profile uses a wider
 captions, and a green version-status dot. Mobile retains the compact Fredoka
 and Courier Prime composition. Keep animations, translations, and version data
 shared. The canvas still uses white as its background-image fallback.
+
+## Authentication notebook
+
+Authentication follows the supplied mobile and tablet references with warm
+paper, subtle dots, a folded corner, lined inputs, and the existing local bee
+mascot. Use the centralized notebook/paper/pencil color tokens, Courier Prime
+for labels, Plus Jakarta Sans for the tablet brand, and Fredoka for the welcome
+accent. All fonts and artwork remain bundled locally.
+
+`AuthLayout` chooses compact mobile below 600 logical pixels and a two-column
+notebook above that breakpoint. Tablet uses the rounded notebook frame; mobile
+and Web fill the available window with rounded paper corners. Mobile uses a
+minimal 6-pixel margin, omits the notebook date/time header, and keeps controls
+in the safe area. A rounded, shadowed paper fold sits at the sheet's top right;
+the adjacent settings button opens language settings. The form remains
+bounded for readability, while the page and welcome panel fill the window.
+Use at least 48-pixel tap targets and allow scrolling with keyboard insets or
+large text. The bee animation respects reduced motion. Authentication screens
+share these visuals, localized feedback, password visibility, and form styling.

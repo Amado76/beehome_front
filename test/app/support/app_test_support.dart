@@ -1,3 +1,4 @@
+import '../../features/authentication/support/fake_accounts.dart';
 import 'dart:async';
 import 'package:beehome/app/services/app_services.dart';
 import 'package:beehome/app/view_models/app_view_model.dart';
@@ -107,6 +108,7 @@ AppViewModel viewModelFor(AppServices services) {
   final AppViewModel viewModel = AppViewModel(
     services: services,
     deviceLocales: () => WidgetsBinding.instance.platformDispatcher.locales,
+    authenticationRepository: FakeAccounts(),
   );
   addTearDown(viewModel.dispose);
   unawaited(viewModel.initialize());

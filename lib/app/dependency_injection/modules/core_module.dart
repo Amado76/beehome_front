@@ -24,6 +24,8 @@ void registerCoreDependencies(GetIt container, {required AppConfig config}) {
     () => SessionService(
       container<SessionRepository>(),
       container<AppPreferencesRepository>(),
+      verifyCurrentUser: () =>
+          container<UserAuthenticationRepository>().currentUser(),
     ),
   );
   container.registerLazySingleton<Dio>(Dio.new);
@@ -39,7 +41,10 @@ void registerCoreDependencies(GetIt container, {required AppConfig config}) {
           container<AuthenticationRepository>().refresh(token),
     ),
   );
-  container.registerLazySingleton<AuthenticationRepository>(
+  container.registerLazySingleton<UserAuthenticationRepository>(
     () => RemoteAuthenticationRepository(container<ApiClient>()),
+  );
+  container.registerLazySingleton<AuthenticationRepository>(
+    () => container<UserAuthenticationRepository>(),
   );
 }

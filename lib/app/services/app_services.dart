@@ -44,7 +44,10 @@ class AppServices {
     return supportedLocales.first;
   }
 
-  Future<void> initialize(List<Locale> deviceLocales) async {
+  Future<void> initialize(
+    List<Locale> deviceLocales, {
+    bool restoreSession = true,
+  }) async {
     _deviceLocales = List.of(deviceLocales);
     final String? saved = await preferences.locale();
     final String? language = saved?.replaceAll('_', '-').split('-').first;
@@ -53,7 +56,11 @@ class AppServices {
       if (supported.languageCode == language) _localeOverride = supported;
     }
     _resolveCurrentLocale();
-    await session.restore();
+    if (restoreSession) {
+      await session.restore();
+    } else {
+      await session.clear();
+    }
   }
 
   void updateDeviceLocales(List<Locale> deviceLocales) {

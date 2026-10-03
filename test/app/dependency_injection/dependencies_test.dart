@@ -1,5 +1,5 @@
-import 'package:beehome/app/di/modules/app_module.dart';
-import 'package:beehome/app/di/modules/core_module.dart';
+import 'package:beehome/app/dependency_injection/modules/app_module.dart';
+import 'package:beehome/app/dependency_injection/modules/core_module.dart';
 import 'package:beehome/app/services/app_services.dart';
 import 'package:beehome/app/view_models/app_view_model.dart';
 import 'package:beehome/core/auth/repos/remote_authentication_repository.dart';

@@ -27,6 +27,7 @@ flutter:
   generate: true
   assets:
     - assets/mascote.png
+    - assets/mascote_splash.png
   fonts:
     - family: PlusJakartaSans
       fonts:

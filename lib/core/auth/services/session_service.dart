@@ -2,12 +2,23 @@ import 'package:flutter/foundation.dart';
 
 import '../../preferences/repos/local_app_preferences_repository.dart';
 import '../models/session_tokens.dart';
+import '../models/session_user.dart';
+import '../../network/models/api_error.dart';
 import '../repos/local_session_repository.dart';
 
 enum SessionState { loading, signedOut, signedIn, failure }
 
 class SessionService extends ChangeNotifier {
-  SessionService(this._repository, this._preferences);
+  SessionService(
+    this._repository,
+    this._preferences, {
+    Future<SessionUser> Function()? verifyCurrentUser,
+  }) : _verifyCurrentUser = verifyCurrentUser;
+
+  final Future<SessionUser> Function()? _verifyCurrentUser;
+  SessionUser? _user;
+  SessionUser? get user => _user;
+  bool _persist = true;
 
   final SessionRepository _repository;
   final AppPreferencesRepository _preferences;
@@ -38,6 +49,9 @@ class SessionService extends ChangeNotifier {
       return;
     }
     final int generation = ++_generation;
+    _renewal = null;
+    _tokens = null;
+    _user = null;
     _state = SessionState.loading;
     notifyListeners();
     try {
@@ -47,34 +61,62 @@ class SessionService extends ChangeNotifier {
         if (restored == null) await _preferences.setSelectedFamilyId(null);
         if (generation != _generation) return;
         _tokens = restored;
+        _user = null;
+        _persist = true;
         _state = restored == null
             ? SessionState.signedOut
-            : SessionState.signedIn;
+            : SessionState.loading;
       });
+      if (generation != _generation || _tokens == null) return;
+      final SessionUser? user = await _verifyCurrentUser?.call();
+      if (generation != _generation) return;
+      _user = user;
+      _state = SessionState.signedIn;
+    } on ApiError catch (error) {
+      if (generation != _generation) return;
+      if (error.status == 401) {
+        await clear();
+        return;
+      }
+      _tokens = null;
+      _user = null;
+      _state = SessionState.failure;
     } catch (_) {
       if (generation != _generation) return;
       _tokens = null;
+      _user = null;
       _state = SessionState.failure;
+    } finally {
+      if (generation == _generation) notifyListeners();
     }
-    if (generation == _generation) notifyListeners();
   }
 
-  Future<void> replace(SessionTokens tokens) async {
+  Future<void> replace(SessionTokens tokens, {bool persist = true}) async {
     final int generation = ++_generation;
     _renewal = null;
     _tokens = null;
+    _user = null;
+    _persist = persist;
     _state = SessionState.loading;
     notifyListeners();
     try {
       await _serialize(() async {
         if (generation != _generation) return;
         await _preferences.setSelectedFamilyId(null);
-        await _repository.write(tokens);
+        if (persist) {
+          await _repository.write(tokens);
+        } else {
+          await _repository.clear();
+        }
         if (generation != _generation) return;
         _tokens = tokens;
-        _state = SessionState.signedIn;
         _pendingClear = false;
       });
+      if (generation != _generation) return;
+      final SessionUser? user = await _verifyCurrentUser?.call();
+      if (generation != _generation) return;
+      _user = user;
+      _state = SessionState.signedIn;
     } catch (_) {
       try {
         await _serialize(() async {
@@ -84,6 +126,8 @@ class SessionService extends ChangeNotifier {
         // Keep failure visible when the platform cannot remove credentials.
       }
       if (generation == _generation) {
+        _tokens = null;
+        _user = null;
         _state = SessionState.failure;
         notifyListeners();
       }
@@ -97,6 +141,7 @@ class SessionService extends ChangeNotifier {
     _pendingClear = true;
     _renewal = null;
     _tokens = null;
+    _user = null;
     _state = SessionState.signedOut;
     notifyListeners();
     try {
@@ -135,7 +180,7 @@ class SessionService extends ChangeNotifier {
       if (generation != _generation) return false;
       await _serialize(() async {
         if (generation != _generation) return;
-        await _repository.write(replacement);
+        if (_persist) await _repository.write(replacement);
         if (generation == _generation) _tokens = replacement;
       });
       return generation == _generation;
