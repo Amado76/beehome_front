@@ -29,15 +29,30 @@ regional formatting belong to PDR-FE-002.
 
 ```sh
 flutter pub get
-flutter run --dart-define=API_ORIGIN=http://localhost:8080
+flutter run --dart-define=API_ORIGIN=http://localhost:8082
 ```
 
 `API_ORIGIN` must be an origin without a path, query, fragment or credentials.
-Debug/profile builds default to `http://localhost:8080`. Release builds require
+Native debug/profile builds default to `http://localhost:8082`. Web debug/profile
+builds default to the page origin. Release builds require
 an explicit HTTPS origin; invalid configuration displays a diagnostic screen.
 Never pass tokens, passwords or deployment secrets through `--dart-define`.
 
-Use `http://10.0.2.2:8080` for the Android emulator, `http://localhost:8080`
+The local BeeHome backend runs on port 8082; port 8081 is used by another project.
+The VS Code launch configurations use this local backend.
+
+For local web development, run without overriding `API_ORIGIN`:
+
+```sh
+flutter run -d chrome
+```
+
+The root `web_dev_config.yaml` proxies `/api/` to `http://localhost:8082`,
+keeping browser requests on the page origin without requiring backend CORS.
+In VS Code, select `BeeHome Web (API local via proxy)`. Restart `flutter run`
+after changing the proxy configuration.
+
+Use `http://10.0.2.2:8082` for the Android emulator, `http://localhost:8082`
 for the iOS simulator, or the development computer's reachable LAN IP for a
 physical device. Android debug builds allow development HTTP. iOS device HTTP
 may require a scoped local App Transport Security exception in the development

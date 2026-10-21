@@ -36,6 +36,7 @@ abstract final class AppSpacing {
 
 abstract final class AppShape {
   static const double radius = 20;
+  static const double controlRadius = 14;
   static const double fieldRadius = 12;
   static const double elevation = 1;
 }
@@ -72,6 +73,19 @@ abstract final class AppTypography {
   static const TextStyle notebookCaption = TextStyle(
     fontFamily: typewriterFamily,
     fontSize: 13,
+    height: 1.4,
+  );
+  static const TextStyle input = TextStyle(
+    fontFamily: typewriterFamily,
+    fontSize: 16,
+    height: 1.4,
+    color: AppColors.notebookInk,
+  );
+  static const TextStyle dialogTitle = TextStyle(
+    fontFamily: typewriterFamily,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.notebookInk,
     height: 1.4,
   );
   static const TextStyle loadingCaption = TextStyle(

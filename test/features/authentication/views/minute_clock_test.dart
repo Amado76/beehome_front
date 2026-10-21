@@ -1,4 +1,4 @@
-import 'package:beehome/features/authentication/views/minute_clock.dart';
+import 'package:beehome/design_system/components/minute_clock.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 

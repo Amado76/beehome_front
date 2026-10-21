@@ -31,6 +31,21 @@ void main() {
   });
 
   test(
+    'session loss during password change returns to login silently',
+    () async {
+      await session.replace(const SessionTokens('access', 'refresh'));
+      model.selectMode(AuthMode.changePassword);
+      model.failure = AuthFailure.currentPassword;
+
+      await session.clear();
+
+      expect(model.mode, AuthMode.login);
+      expect(model.failure, isNull);
+      expect(model.notice, isNull);
+    },
+  );
+
+  test(
     'registration returns to login, prefilled, without signing in',
     () async {
       model.selectMode(AuthMode.register);

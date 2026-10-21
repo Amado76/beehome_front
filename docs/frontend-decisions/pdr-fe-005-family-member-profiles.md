@@ -1,6 +1,6 @@
 # PDR-FE-005: Family member profiles
 
-- **Status:** Planned; UX reference pending
+- **Status:** Dashboard list/create/edit slice implemented; remaining management planned
 - **Backend source:** PDR-03 and current Family Members API contract
 - **Depends on:** PDR-FE-004 family workspace
 
@@ -33,6 +33,16 @@ Keep profile IDs stable for routines, study, reading, photos, and history.
   contract.
 
 ## UX and open decisions
+
+### Implementation progress — 2026-10-03
+
+The family home now lists active profiles with pagination and shared selection
+between avatars and task filters. OWNER/ADMIN can create/edit name, member type,
+birth date, and profile color. Editing also supports the independent
+`completedTaskColor` preference; creation does not send unsupported preferences.
+Avatars use local Flutter placeholders because the API supplies no avatar asset.
+Inactive-profile management and self-link/unlink remain planned workflows.
+See the [family home plan](pdr-fe-004-family-workspace.md).
 
 **UX reference: pending.** Need list/detail, adult/child distinction, color
 selection, inactive management, and account-linking flows. Avatar is read-only

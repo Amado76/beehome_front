@@ -273,4 +273,364 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get authProviderSoon =>
       'El acceso con Google y Apple estará disponible pronto. Continúa con tu correo.';
+
+  @override
+  String get homeNotebook => 'cuaderno familiar';
+
+  @override
+  String get homeToday => 'Hoy';
+
+  @override
+  String get homeChooseFamily => 'Elige tu familia';
+
+  @override
+  String get homeNoFamilies => '¿Empezamos tu cuaderno familiar?';
+
+  @override
+  String get homeCreateFamily => 'Crear familia';
+
+  @override
+  String get homeFamilySettings => 'Configurar familia';
+
+  @override
+  String get homeSwitchFamily => 'Cambiar familia';
+
+  @override
+  String get homeFamilyName => 'Nombre de la familia';
+
+  @override
+  String get homeFamilyNameHint => 'Familia Silva';
+
+  @override
+  String homeFieldExample(String example) {
+    return 'Ej.: $example';
+  }
+
+  @override
+  String get homeTaskTitleHint => 'Ordenar los juguetes';
+
+  @override
+  String get homeSave => 'Guardar';
+
+  @override
+  String get homeCancel => 'Cancelar';
+
+  @override
+  String get homeMore => 'Cargar más';
+
+  @override
+  String get homeError => 'No se pudo cargar. Inténtalo de nuevo.';
+
+  @override
+  String get homeDenied => 'No tienes permiso para este cambio.';
+
+  @override
+  String get homeUncertain =>
+      'No pudimos confirmar el cambio. Revisa los datos recargados antes de volver a intentarlo.';
+
+  @override
+  String get homeReviewed => 'Revisé los datos';
+
+  @override
+  String get homeNoProfiles =>
+      'Añade a las personas de tu familia para organizar el día.';
+
+  @override
+  String get homeAddProfile => 'Añadir persona';
+
+  @override
+  String get homeEditProfile => 'Editar persona';
+
+  @override
+  String get homeProfileName => 'Nombre';
+
+  @override
+  String get homeAdult => 'Adulto';
+
+  @override
+  String get homeChild => 'Niño/a';
+
+  @override
+  String get homeBirthDate => 'Nacimiento (AAAA-MM-DD, opcional)';
+
+  @override
+  String get homeInvalidDate => 'Introduce una fecha válida que no sea futura.';
+
+  @override
+  String get homeProfileColor => 'Color del perfil';
+
+  @override
+  String get homeBoard => 'Pizarra libre';
+
+  @override
+  String get homeWrite => 'Escribir';
+
+  @override
+  String get homeEdit => 'Editar';
+
+  @override
+  String get homeView => 'Ver pizarra';
+
+  @override
+  String get homeEmptyBoard =>
+      'Un espacio para escribir a mano. Toca para empezar.';
+
+  @override
+  String get homeTasks => 'Rutina y tareas';
+
+  @override
+  String get homeNoTasks => 'No hay tareas para hoy.';
+
+  @override
+  String get homeAddTask => 'Añadir tarea';
+
+  @override
+  String get homeTaskTitle => '¿Qué vamos a hacer?';
+
+  @override
+  String get homeRefreshTasks => 'Actualizar tareas del plan';
+
+  @override
+  String get homeFinalized =>
+      'Día finalizado. Las tareas están disponibles para consultar.';
+
+  @override
+  String get homeFooter => 'Cuaderno Digital Familiar';
+
+  @override
+  String get drawingPen => 'Lápiz';
+
+  @override
+  String get drawingErase => 'Borrar trazo';
+
+  @override
+  String get drawingUndo => 'Deshacer';
+
+  @override
+  String get drawingRedo => 'Rehacer';
+
+  @override
+  String get drawingClear => 'Limpiar pizarra';
+
+  @override
+  String get drawingClearConfirm => '¿Borrar todos los trazos de esta pizarra?';
+
+  @override
+  String get drawingSaving => 'Guardando…';
+
+  @override
+  String get drawingSaved => 'Guardado';
+
+  @override
+  String get drawingUnsaved => 'Cambios sin guardar';
+
+  @override
+  String get drawingSaveError =>
+      'No se pudo guardar. Tu escritura sigue aquí; inténtalo de nuevo.';
+
+  @override
+  String get drawingConflict =>
+      'La pizarra cambió en otro dispositivo. Elige qué versión conservar.';
+
+  @override
+  String get drawingKeepLocal => 'Guardar mi versión';
+
+  @override
+  String get drawingUseRemote => 'Usar versión del servidor';
+
+  @override
+  String get drawingReplaceConfirm =>
+      'Esta opción reemplaza la otra versión. ¿Continuar?';
+
+  @override
+  String get drawingLeaveConfirm =>
+      'Hay escritura sin guardar. Guarda antes de salir o descarta los cambios.';
+
+  @override
+  String get drawingDiscard => 'Descartar';
+
+  @override
+  String get drawingLimit =>
+      'La pizarra alcanzó su límite de tamaño. Borra algunos trazos para continuar.';
+
+  @override
+  String get drawingWidth => 'Grosor';
+
+  @override
+  String get drawingSurface => 'Área de escritura a mano';
+
+  @override
+  String homeProgress(int completed, int total) {
+    return '$completed de $total completadas';
+  }
+
+  @override
+  String get homeCompletionColor => 'Color de tareas completadas';
+
+  @override
+  String get homeDefault => 'Predeterminado';
+
+  @override
+  String get familySetupTitle => 'Tu familia';
+
+  @override
+  String get familySetupIntro =>
+      'Ponle un nombre a tu familia y añade a sus integrantes.';
+
+  @override
+  String get familySetupMembers => 'Miembros de la familia';
+
+  @override
+  String get familySetupNewMember => 'Nuevo miembro';
+
+  @override
+  String get familySetupEditMember => 'Editar miembro';
+
+  @override
+  String get familySetupCustomColor => 'Elegir color pastel';
+
+  @override
+  String get familySetupHue => 'Tono';
+
+  @override
+  String get familySetupSoftness => 'Suavidad';
+
+  @override
+  String get familySetupDone => 'Finalizar';
+
+  @override
+  String get familySetupProfile => 'Perfil';
+
+  @override
+  String get familySetupCompletedTask => 'Tarea completada';
+
+  @override
+  String get familySetupFooter => 'BeeHome · Cuaderno digital familiar';
+
+  @override
+  String get familySetupCreateHint =>
+      'El nombre de la familia se guardará al añadir el primer miembro.';
+
+  @override
+  String get familySetupRemoveMember => 'Eliminar miembro';
+
+  @override
+  String get familySetupRemoveHint =>
+      '¿Eliminar este miembro de la familia? El perfil se desactivará y se conservará su historial.';
+
+  @override
+  String get familySetupBirthDate => 'Nacimiento (opcional)';
+
+  @override
+  String familySetupAge(int age) {
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age años',
+      one: '1 año',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deviceConnectionWifi => 'Wi-Fi conectado';
+
+  @override
+  String get deviceConnectionMobile => 'Red móvil';
+
+  @override
+  String get deviceConnectionEthernet => 'Ethernet conectada';
+
+  @override
+  String get deviceConnectionOther => 'Otra conexión de red';
+
+  @override
+  String get deviceConnectionOffline => 'Sin conexión de red';
+
+  @override
+  String get deviceConnectionUnknown => 'Conexión no disponible';
+
+  @override
+  String deviceBatteryLevel(int level) {
+    return 'Batería: $level%';
+  }
+
+  @override
+  String get deviceBatteryCharging => 'Cargando';
+
+  @override
+  String get deviceBatteryUnknown => 'Batería no disponible';
+
+  @override
+  String get homeNewNote => 'Nueva nota';
+
+  @override
+  String get homeNoteTitle => 'Título de la nota';
+
+  @override
+  String get homeSwipeNotes => 'Desliza para ver notas ›';
+
+  @override
+  String get homeNoteTitleOptional => 'Título';
+
+  @override
+  String get noteDelete => 'Eliminar nota';
+
+  @override
+  String get noteDeleteConfirm => '¿Eliminar esta nota?';
+
+  @override
+  String get noteDeleteError =>
+      'No se pudo eliminar la nota. Inténtalo de nuevo.';
+
+  @override
+  String homeActiveNotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notas activas',
+      one: '1 nota activa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTaskRepeatDaily => 'Repetir diariamente';
+
+  @override
+  String get homeTaskProfiles => 'Perfiles';
+
+  @override
+  String get homeTaskSelectProfile => 'Selecciona al menos un perfil.';
+
+  @override
+  String get homeTaskRetryRemaining =>
+      'Es posible que algunas asignaciones ya se hayan guardado. Guarda de nuevo para continuar con los perfiles restantes.';
+
+  @override
+  String get homeTaskUncertain =>
+      'No se pudo confirmar el resultado de una operación. Revisa las tareas de todos los perfiles seleccionados antes de crear las asignaciones que falten. Confirmar esta revisión cierra el formulario.';
+
+  @override
+  String get homeTaskNewLabel => 'Nueva tarea';
+
+  @override
+  String get homeTaskBack => 'Volver al inicio';
+
+  @override
+  String get homeTaskAssignees => '¿Quién lo hará?';
+
+  @override
+  String get homeTaskSave => 'Guardar tarea';
+
+  @override
+  String homeTaskSelectionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count seleccionados',
+      one: '1 seleccionado',
+    );
+    return '$_temp0';
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../features/family_workspace/views/family_home_view.dart';
 
 import '../../design_system/components/foundation_panel.dart';
+import '../../design_system/components/device_status_frame.dart';
 import '../../design_system/theme/app_theme.dart';
 import '../../design_system/theme/app_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -26,6 +28,8 @@ class BeeHomeApp extends StatelessWidget {
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      builder: (context, child) =>
+          DeviceStatusFrame(child: child ?? const SizedBox.shrink()),
       locale: viewModel.locale,
       supportedLocales: AppViewModel.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -55,6 +59,16 @@ class BeeHomeApp extends StatelessWidget {
                 return AuthenticationView(
                   viewModel: viewModel.authentication,
                   languageSelector: _LanguageSelector(viewModel: viewModel),
+                );
+              }
+              if (viewModel.familyHome != null) {
+                return FamilyHomeView(
+                  viewModel: viewModel.familyHome!,
+                  languageSelector: _LanguageSelector(viewModel: viewModel),
+                  onSignOut: viewModel.signOut,
+                  onChangePassword: () => viewModel.authentication.selectMode(
+                    AuthMode.changePassword,
+                  ),
                 );
               }
               panel = FoundationPanel(

@@ -1,13 +1,13 @@
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../../design_system/components/app_field.dart';
 import '../../../design_system/theme/app_tokens.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../view_models/authentication_view_model.dart';
-import 'minute_clock.dart';
+import '../../../design_system/components/notebook_header.dart';
+import '../../../design_system/components/device_status_frame.dart';
 
 enum AuthLayout {
   compact(24, 88),
@@ -88,193 +88,119 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   bool get _canSubmit =>
       widget.viewModel.canSubmitForm(_password.text, _confirmPassword.text);
 
-  double _statusBarHeight(BuildContext context) {
-    final MediaQueryData media = MediaQuery.of(context);
-    // Hiding the native bar can remove its inset on devices without a cutout.
-    final double minimum =
-        !kIsWeb &&
-            defaultTargetPlatform == TargetPlatform.iOS &&
-            media.orientation == Orientation.portrait
-        ? 54
-        : 32;
-    return math.max(media.viewPadding.top, minimum);
-  }
-
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.viewModel,
     builder: (BuildContext context, Widget? child) => Scaffold(
       backgroundColor: AppColors.paperWarm,
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom:
-                AuthLayout.forWidth(MediaQuery.sizeOf(context).width) ==
-                AuthLayout.compact,
-            minimum: EdgeInsets.only(
-              top:
-                  AuthLayout.forWidth(MediaQuery.sizeOf(context).width) ==
-                      AuthLayout.compact
-                  ? _statusBarHeight(context)
-                  : 0,
-            ),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final AuthLayout layout = AuthLayout.forWidth(
-                  constraints.maxWidth,
-                );
-                final bool compact = layout == AuthLayout.compact;
-                if (!compact) {
-                  return ColoredBox(
-                    color: AppColors.paper,
-                    child: SingleChildScrollView(
-                      key: const ValueKey('auth-scroll'),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight,
-                        ),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            key: const ValueKey('auth-notebook'),
-                            children: [
-                              _header(context, layout),
-                              Expanded(
-                                child: _NotebookAuthBody(
-                                  width: constraints.maxWidth,
-                                  form: _form(context),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+      body: SafeArea(
+        bottom:
+            AuthLayout.forWidth(MediaQuery.sizeOf(context).width) ==
+            AuthLayout.compact,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final AuthLayout layout = AuthLayout.forWidth(constraints.maxWidth);
+            final bool compact = layout == AuthLayout.compact;
+            if (!compact) {
+              return ColoredBox(
+                color: AppColors.paper,
+                child: SingleChildScrollView(
+                  key: const ValueKey('auth-scroll'),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
                     ),
-                  );
-                }
-                final double compactTopPadding =
-                    widget.viewModel.mode == AuthMode.login &&
-                        widget.viewModel.allowRememberDevice
-                    ? 18
-                    : 4;
-                const double margin = 8;
-                const double radius = 32;
-                return CustomPaint(
-                  painter: const _PaperDots(),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: SingleChildScrollView(
-                      key: const ValueKey('auth-scroll'),
-                      padding: EdgeInsets.fromLTRB(margin, margin, margin, 0),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: constraints.maxWidth,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                minHeight: math.max(
-                                  0,
-                                  constraints.maxHeight - margin - 16,
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.notebook,
-                                borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(
-                                  color: AppColors.paperBorder,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(radius),
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      key: const ValueKey('auth-mobile'),
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        _CompactAuthBody(
-                                          availableHeight:
-                                              constraints.maxHeight -
-                                              margin -
-                                              16,
-                                          topPadding: compactTopPadding,
-                                          form: _form(
-                                            context,
-                                            fillProviders: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        key: const ValueKey('auth-notebook'),
+                        children: [
+                          _header(context, layout),
+                          Expanded(
+                            child: _NotebookAuthBody(
+                              width: constraints.maxWidth,
+                              form: _form(context),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          if (AuthLayout.forWidth(MediaQuery.sizeOf(context).width) ==
-              AuthLayout.compact)
-            Positioned(
-              top: 0,
-              left: MediaQuery.viewPaddingOf(context).left,
-              right: MediaQuery.viewPaddingOf(context).right,
-              child: _DeviceStatusBar(height: _statusBarHeight(context)),
-            ),
-        ],
+                ),
+              );
+            }
+            final double compactTopPadding =
+                widget.viewModel.mode == AuthMode.login &&
+                    widget.viewModel.allowRememberDevice
+                ? 18
+                : 4;
+            const double margin = 8;
+            const double radius = 32;
+            return CustomPaint(
+              painter: const _PaperDots(),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SingleChildScrollView(
+                  key: const ValueKey('auth-scroll'),
+                  padding: EdgeInsets.fromLTRB(margin, margin, margin, 0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: constraints.maxWidth),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (!DeviceStatusFrame.showsStatusBar(context))
+                          _header(context, layout),
+                        Container(
+                          constraints: BoxConstraints(
+                            minHeight: math.max(
+                              0,
+                              constraints.maxHeight - margin - 16,
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.notebook,
+                            borderRadius: BorderRadius.circular(radius),
+                            border: Border.all(color: AppColors.paperBorder),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(radius),
+                            child: Stack(
+                              children: [
+                                Column(
+                                  key: const ValueKey('auth-mobile'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _CompactAuthBody(
+                                      availableHeight:
+                                          constraints.maxHeight - margin - 16,
+                                      topPadding: compactTopPadding,
+                                      form: _form(context, fillProviders: true),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     ),
   );
 
   Widget _header(BuildContext context, AuthLayout layout) {
     final AppLocalizations strings = AppLocalizations.of(context)!;
-    final String locale = Localizations.localeOf(context).languageCode == 'et'
-        ? 'et_EE'
-        : Localizations.localeOf(context).toString();
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.paperBorder)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: Row(
-        children: [
-          const ExcludeSemantics(
-            child: Icon(Icons.circle, color: AppColors.honey, size: 8),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: MinuteClock(
-              builder: (BuildContext context, DateTime now) => Text(
-                '${DateFormat.yMd(locale).format(now)}  |  ${DateFormat.Hm(locale).format(now)}',
-                style: AppTypography.notebookCaption.copyWith(
-                  color: AppColors.honey,
-                ),
-              ),
-            ),
-          ),
-          if (layout == AuthLayout.notebook &&
-              MediaQuery.sizeOf(context).width >= 1000)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                strings.authNotebook,
-                style: AppTypography.smallCaption,
-              ),
-            ),
-          if (layout == AuthLayout.notebook && widget.languageSelector != null)
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 200),
-              child: widget.languageSelector!,
-            ),
-        ],
-      ),
+    return NotebookHeader(
+      backgroundColor: AppColors.paperWarm,
+      title: MediaQuery.sizeOf(context).width >= 1000
+          ? Text(strings.authNotebook, style: AppTypography.smallCaption)
+          : const Text('BEEHOME', style: AppTypography.smallCaption),
+      actions: [if (widget.languageSelector != null) widget.languageSelector!],
     );
   }
 
@@ -315,65 +241,43 @@ class _AuthenticationViewState extends State<AuthenticationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTypography.notebookCaption.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextField(
-            key: ValueKey('auth-$field'),
-            controller: controller,
-            enabled: !widget.viewModel.busy,
-            obscureText: password && !widget.viewModel.passwordVisible,
-            keyboardType: email
-                ? TextInputType.emailAddress
-                : TextInputType.text,
-            textInputAction: inputAction,
-            autofillHints: autofillHints,
-            autocorrect: !password && !email,
-            enableSuggestions: !password && !email,
-            style: AppTypography.notebookCaption.copyWith(fontSize: 16),
-            onSubmitted: inputAction == TextInputAction.done
-                ? (_) => _submit()
-                : null,
-            decoration: InputDecoration(
-              hintText: hint ?? (password ? label : null),
-              hintStyle: AppTypography.notebookCaption.copyWith(
-                fontSize: 16,
-                color: AppColors.outline,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.normal,
-              ),
-              errorText: errorText ?? _fieldError(field, strings),
-              errorMaxLines: 5,
-              fillColor: Colors.transparent,
-              filled: false,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 8),
-              border: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.paperBorder),
-              ),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.paperBorder),
-              ),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.notebookInk, width: 2),
-              ),
-              suffixIcon: password
-                  ? IconButton(
-                      tooltip: widget.viewModel.passwordVisible
-                          ? strings.authHidePassword
-                          : strings.authShowPassword,
-                      onPressed: widget.viewModel.togglePasswordVisibility,
-                      icon: Icon(
-                        widget.viewModel.passwordVisible
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                        size: 20,
-                      ),
-                    )
+          AppField(
+            label: label,
+            child: TextField(
+              key: ValueKey('auth-$field'),
+              controller: controller,
+              enabled: !widget.viewModel.busy,
+              obscureText: password && !widget.viewModel.passwordVisible,
+              keyboardType: email
+                  ? TextInputType.emailAddress
+                  : TextInputType.text,
+              textInputAction: inputAction,
+              autofillHints: autofillHints,
+              autocorrect: !password && !email,
+              enableSuggestions: !password && !email,
+              style: AppTypography.input,
+              onSubmitted: inputAction == TextInputAction.done
+                  ? (_) => _submit()
                   : null,
+              decoration: InputDecoration(
+                hintText: hint ?? (password ? label : null),
+                errorText: errorText ?? _fieldError(field, strings),
+                errorMaxLines: 5,
+                suffixIcon: password
+                    ? IconButton(
+                        tooltip: widget.viewModel.passwordVisible
+                            ? strings.authHidePassword
+                            : strings.authShowPassword,
+                        onPressed: widget.viewModel.togglePasswordVisibility,
+                        icon: Icon(
+                          widget.viewModel.passwordVisible
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          size: 20,
+                        ),
+                      )
+                    : null,
+              ),
             ),
           ),
           if (action != null)
@@ -620,12 +524,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
         key: const ValueKey('auth-submit'),
         onPressed: _canSubmit ? _submit : null,
         style: FilledButton.styleFrom(
-          backgroundColor: AppColors.honey,
-          foregroundColor: AppColors.onHoney,
           minimumSize: Size(double.infinity, slimSubmit ? 36 : 52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: slimSubmit ? 4 : 12),
@@ -753,16 +652,6 @@ class _AuthenticationViewState extends State<AuthenticationView> {
         onPressed: widget.viewModel.busy
             ? null
             : widget.viewModel.showProviderUnavailable,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: AppColors.notebook,
-          foregroundColor: AppColors.notebookInk,
-          side: const BorderSide(color: AppColors.paperBorder),
-          minimumSize: const Size.square(AppLayout.minimumTapHeight),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
         child: Semantics(
           label: label,
           child: ExcludeSemantics(
@@ -946,72 +835,6 @@ class _NotebookAuthBody extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DeviceStatusBar extends StatelessWidget {
-  const _DeviceStatusBar({required this.height});
-  final double height;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-    height: height,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(32, 8, 32, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: MinuteClock(
-                builder: (BuildContext context, DateTime now) => Text(
-                  MaterialLocalizations.of(context).formatTimeOfDay(
-                    TimeOfDay.fromDateTime(now),
-                    alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(
-                      context,
-                    ),
-                  ),
-                  style: AppTypography.notebookCaption.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.2,
-                    height: 1.5,
-                    color: AppColors.honey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Keep the center clear for the camera cutout / Dynamic Island.
-          SizedBox(
-            width: math.min(164, MediaQuery.sizeOf(context).width * 0.42),
-          ),
-          // Decorative indicators for the visual preview, not device readings.
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: ExcludeSemantics(
-                child: IconTheme(
-                  data: const IconThemeData(color: AppColors.honey, size: 18),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.wifi_rounded),
-                      SizedBox(width: 8),
-                      RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(Icons.battery_full_rounded),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }
 
 class _WelcomePanel extends StatelessWidget {

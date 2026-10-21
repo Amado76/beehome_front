@@ -85,5 +85,147 @@
   "authForbidden": "You do not have permission to complete this action.",
   "authSessionExpired": "Your session has expired. Sign in again.",
   "authOrContinue": "or continue with",
-  "authProviderSoon": "Google and Apple sign-in is coming soon. Continue with your email."
+  "authProviderSoon": "Google and Apple sign-in is coming soon. Continue with your email.",
+  "homeNotebook": "family notebook",
+  "homeToday": "Today",
+  "homeChooseFamily": "Choose your family",
+  "homeNoFamilies": "Ready to start your family notebook?",
+  "homeCreateFamily": "Create family",
+  "homeFamilySettings": "Family settings",
+  "homeSwitchFamily": "Switch family",
+  "homeFamilyName": "Family name",
+  "homeFamilyNameHint": "Silva Family",
+  "homeFieldExample": "e.g. {example}",
+  "@homeFieldExample": {
+    "placeholders": {
+      "example": { "type": "String" }
+    }
+  },
+  "homeTaskTitleHint": "Tidy up the toys",
+  "homeSave": "Save",
+  "homeCancel": "Cancel",
+  "homeMore": "Load more",
+  "homeError": "Could not load. Please try again.",
+  "homeDenied": "You do not have permission to make this change.",
+  "homeUncertain": "We could not confirm the change. Review the reloaded data before trying again.",
+  "homeReviewed": "I reviewed the data",
+  "homeNoProfiles": "Add your family members to organize the day.",
+  "homeAddProfile": "Add person",
+  "homeEditProfile": "Edit person",
+  "homeProfileName": "Name",
+  "homeAdult": "Adult",
+  "homeChild": "Child",
+  "homeBirthDate": "Birth date (YYYY-MM-DD, optional)",
+  "homeInvalidDate": "Enter a valid date that is not in the future.",
+  "homeProfileColor": "Profile color",
+  "homeBoard": "Free board",
+  "homeWrite": "Write",
+  "homeEdit": "Edit",
+  "homeView": "View board",
+  "homeEmptyBoard": "A space for handwriting. Tap to begin.",
+  "homeTasks": "Routine & Tasks",
+  "homeNoTasks": "No tasks for today.",
+  "homeAddTask": "Add task",
+  "homeTaskTitle": "What shall we do?",
+  "homeRefreshTasks": "Refresh planned tasks",
+  "homeFinalized": "Day finalized. Tasks are available to view.",
+  "homeFooter": "Digital Family Notebook",
+  "drawingPen": "Pen",
+  "drawingErase": "Erase stroke",
+  "drawingUndo": "Undo",
+  "drawingRedo": "Redo",
+  "drawingClear": "Clear board",
+  "drawingClearConfirm": "Erase all strokes on this board?",
+  "drawingSaving": "Saving…",
+  "drawingSaved": "Saved",
+  "drawingUnsaved": "Unsaved changes",
+  "drawingSaveError": "Could not save. Your handwriting is still here; try again.",
+  "drawingConflict": "The board changed on another device. Choose which version to keep.",
+  "drawingKeepLocal": "Save my version",
+  "drawingUseRemote": "Use server version",
+  "drawingReplaceConfirm": "This choice replaces the other version. Continue?",
+  "drawingLeaveConfirm": "There is unsaved handwriting. Save before leaving or discard the changes.",
+  "drawingDiscard": "Discard",
+  "drawingLimit": "The board reached its size limit. Erase some strokes before continuing.",
+  "drawingWidth": "Pen width",
+  "drawingSurface": "Handwriting area",
+  "homeProgress": "{completed} of {total} completed",
+  "@homeProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeCompletionColor": "Completed task color",
+  "homeDefault": "Default",
+  "familySetupTitle": "Your family",
+  "familySetupIntro": "Name your family and add the people who belong to it.",
+  "familySetupMembers": "Family members",
+  "familySetupNewMember": "New member",
+  "familySetupEditMember": "Edit member",
+  "familySetupCustomColor": "Choose a pastel color",
+  "familySetupHue": "Hue",
+  "familySetupSoftness": "Softness",
+  "familySetupDone": "Done",
+  "familySetupProfile": "Profile",
+  "familySetupCompletedTask": "Completed task",
+  "familySetupFooter": "BeeHome · Family digital notebook",
+  "familySetupCreateHint": "Save the family name to start adding members.",
+  "familySetupRemoveMember": "Remove member",
+  "familySetupRemoveHint": "Remove this family member? The profile will be deactivated; its history will be preserved.",
+  "familySetupBirthDate": "Birth date (optional)",
+  "familySetupAge": "{age, plural, one{1 year} other{{age} years}}",
+  "@familySetupAge": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "deviceConnectionWifi": "Wi-Fi connected",
+  "deviceConnectionMobile": "Mobile network",
+  "deviceConnectionEthernet": "Ethernet connected",
+  "deviceConnectionOther": "Other network connection",
+  "deviceConnectionOffline": "No network connection",
+  "deviceConnectionUnknown": "Connection unavailable",
+  "deviceBatteryLevel": "Battery: {level}%",
+  "deviceBatteryCharging": "Charging",
+  "deviceBatteryUnknown": "Battery unavailable",
+  "@deviceBatteryLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewNote": "New note",
+  "homeNoteTitle": "Note title",
+  "homeSwipeNotes": "Swipe to see notes ›",
+  "homeNoteTitleOptional": "Title",
+  "noteDelete": "Delete note",
+  "noteDeleteConfirm": "Delete this note?",
+  "noteDeleteError": "Could not delete this note. Try again.",
+  "homeActiveNotes": "{count, plural, =1{1 active note} other{{count} active notes}}",
+  "@homeActiveNotes": {"placeholders": {"count": {"type": "int"}}},
+  "homeTaskRepeatDaily": "Repeat daily",
+  "homeTaskProfiles": "Profiles",
+  "homeTaskSelectProfile": "Select at least one profile.",
+  "homeTaskRetryRemaining": "Some assignments may already have been saved. Save again to continue with the remaining profiles.",
+  "homeTaskUncertain": "The result of a save could not be confirmed. Review the tasks for all selected profiles before creating any missing assignments. Confirming this review closes the form.",
+  "homeTaskNewLabel": "New task",
+  "homeTaskBack": "Back to home",
+  "homeTaskAssignees": "Who will do it?",
+  "homeTaskSave": "Save task",
+  "homeTaskSelectionCount": "{count} selected",
+  "@homeTaskSelectionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -6,10 +6,15 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "flutterMode": "debug",
-      "toolArgs": [
-        "--dart-define=API_ORIGIN=http://localhost:8081"
-      ]
+      "flutterMode": "debug"
+    },
+    {
+      "name": "BeeHome Web (API local via proxy)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug"
     }
   ]
 }

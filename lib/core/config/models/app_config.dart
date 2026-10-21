@@ -9,7 +9,7 @@ class AppConfig {
     const String configured = String.fromEnvironment('API_ORIGIN');
     return AppConfig.parse(
       configured.isEmpty && !kReleaseMode
-          ? 'http://localhost:8080'
+          ? (kIsWeb ? Uri.base.origin : 'http://localhost:8082')
           : configured,
       development: !kReleaseMode,
     );

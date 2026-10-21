@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../design_system/components/notebook_header.dart';
+import '../../design_system/components/device_status_frame.dart';
 
 import '../../core/config/models/version.dart';
 import '../../design_system/theme/app_tokens.dart';
@@ -187,60 +189,63 @@ class _SplashViewState extends State<SplashView>
     ),
   );
 
-  Widget _header(AppLocalizations strings, SplashLayout layout) => SizedBox(
-    width: double.infinity,
-    child: Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 16,
-      runSpacing: 8,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget? child) {
-                  final double pulse = (_animation.value * 3) % 1;
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (_motionEnabled)
-                        Transform.scale(
-                          scale: 1 + pulse,
-                          child: Opacity(
-                            opacity: (1 - pulse) * .5,
-                            child: const _Dot(size: 8),
-                          ),
-                        ),
-                      const _Dot(size: 8),
-                    ],
-                  );
-                },
+  Widget _header(AppLocalizations strings, SplashLayout layout) =>
+      !DeviceStatusFrame.showsStatusBar(context)
+      ? NotebookHeader(title: Text('BEEHOME', style: layout.smallCaption))
+      : SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 16,
+            runSpacing: 8,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: AnimatedBuilder(
+                      animation: _animation,
+                      builder: (BuildContext context, Widget? child) {
+                        final double pulse = (_animation.value * 3) % 1;
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            if (_motionEnabled)
+                              Transform.scale(
+                                scale: 1 + pulse,
+                                child: Opacity(
+                                  opacity: (1 - pulse) * .5,
+                                  child: const _Dot(size: 8),
+                                ),
+                              ),
+                            const _Dot(size: 8),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'BEEHOME',
+                    style: layout.smallCaption.copyWith(
+                      color: AppColors.mutedInk.withValues(alpha: .55),
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'BEEHOME',
-              style: layout.smallCaption.copyWith(
-                color: AppColors.mutedInk.withValues(alpha: .55),
-                letterSpacing: 2,
+              Text(
+                strings.splashNotebook.toUpperCase(),
+                style: layout.smallCaption.copyWith(
+                  color: AppColors.mutedInk.withValues(alpha: .55),
+                ),
               ),
-            ),
-          ],
-        ),
-        Text(
-          strings.splashNotebook.toUpperCase(),
-          style: layout.smallCaption.copyWith(
-            color: AppColors.mutedInk.withValues(alpha: .55),
+            ],
           ),
-        ),
-      ],
-    ),
-  );
+        );
 
   Widget _mascot(SplashLayout layout) => ExcludeSemantics(
     child: SizedBox(

@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'family_workspace_module.dart';
+import '../../../features/family_workspace/view_models/family_home_view_model.dart';
 
 import '../../../core/auth/services/session_service.dart';
 import '../../../core/auth/repos/remote_authentication_repository.dart';
@@ -25,6 +27,7 @@ void registerAppDependencies(
     ),
     dispose: (AppServices services) => services.dispose(),
   );
+  registerFamilyWorkspaceDependencies(container);
   // The widget that resolves a factory owns and disposes its ViewModel.
   final ({bool resetLink, String? token}) reset = consumeResetLink();
   final bool resetLink = reset.resetLink;
@@ -38,6 +41,7 @@ void registerAppDependencies(
       previewSplash: previewSplash,
       minimumSplashDuration: const Duration(milliseconds: 1500),
       authenticationRepository: container<UserAuthenticationRepository>(),
+      familyHome: container<FamilyHomeViewModel>(),
       resetToken: token,
       resetLink: resetLink,
     );

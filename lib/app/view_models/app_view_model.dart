@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import '../../features/family_workspace/view_models/family_home_view_model.dart';
 
 import 'package:flutter/widgets.dart';
 
@@ -17,6 +18,7 @@ class AppViewModel extends ChangeNotifier {
     bool previewSplash = false,
     Duration minimumSplashDuration = Duration.zero,
     required UserAuthenticationRepository authenticationRepository,
+    this.familyHome,
     String? resetToken,
     bool resetLink = false,
   }) : _services = services,
@@ -34,6 +36,7 @@ class AppViewModel extends ChangeNotifier {
   }
 
   late final AuthenticationViewModel authentication;
+  final FamilyHomeViewModel? familyHome;
   final AppServices _services;
   final List<Locale> Function() _deviceLocales;
   final bool _previewSplash;
@@ -143,6 +146,7 @@ class AppViewModel extends ChangeNotifier {
     _disposed = true;
     _splashPhraseTimer?.cancel();
     authentication.removeListener(_onServicesChanged);
+    familyHome?.dispose();
     authentication.dispose();
     _services.session.removeListener(_onServicesChanged);
     _services.locale.removeListener(_onServicesChanged);

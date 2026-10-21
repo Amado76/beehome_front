@@ -55,6 +55,7 @@ class AuthenticationViewModel extends ChangeNotifier {
        _resetToken = resetToken,
        _mode = resetLink ? AuthMode.resetPassword : AuthMode.login {
     if (resetLink && !hasResetToken) failure = AuthFailure.invalidReset;
+    _session.addListener(_onSessionChanged);
   }
 
   final UserAuthenticationRepository _repository;
@@ -77,6 +78,20 @@ class AuthenticationViewModel extends ChangeNotifier {
   bool _disposed = false;
   bool get canSubmit => !busy && cooldownSeconds == 0;
   bool get hasResetToken => _resetToken != null && _resetToken!.isNotEmpty;
+
+  void _onSessionChanged() {
+    if (_session.state != SessionState.signedOut ||
+        _mode != AuthMode.changePassword) {
+      return;
+    }
+    _mode = AuthMode.login;
+    failure = null;
+    notice = null;
+    validation = {};
+    fieldErrors = {};
+    passwordVisible = false;
+    _notify();
+  }
 
   void selectMode(AuthMode mode) {
     if (busy) return;
@@ -288,9 +303,9 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   Future<void> _endSessionAfterFailure(AuthFailure reason) async {
-    failure = reason;
     try {
       await _session.clear();
+      failure = reason;
     } catch (_) {
       failure = AuthFailure.storage;
     }
@@ -372,6 +387,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _session.removeListener(_onSessionChanged);
     _resetToken = null;
     _cooldown?.cancel();
     super.dispose();

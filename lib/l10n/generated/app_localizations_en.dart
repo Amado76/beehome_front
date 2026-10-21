@@ -274,4 +274,354 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authProviderSoon =>
       'Google and Apple sign-in is coming soon. Continue with your email.';
+
+  @override
+  String get homeNotebook => 'family notebook';
+
+  @override
+  String get homeToday => 'Today';
+
+  @override
+  String get homeChooseFamily => 'Choose your family';
+
+  @override
+  String get homeNoFamilies => 'Ready to start your family notebook?';
+
+  @override
+  String get homeCreateFamily => 'Create family';
+
+  @override
+  String get homeFamilySettings => 'Family settings';
+
+  @override
+  String get homeSwitchFamily => 'Switch family';
+
+  @override
+  String get homeFamilyName => 'Family name';
+
+  @override
+  String get homeFamilyNameHint => 'Silva Family';
+
+  @override
+  String homeFieldExample(String example) {
+    return 'e.g. $example';
+  }
+
+  @override
+  String get homeTaskTitleHint => 'Tidy up the toys';
+
+  @override
+  String get homeSave => 'Save';
+
+  @override
+  String get homeCancel => 'Cancel';
+
+  @override
+  String get homeMore => 'Load more';
+
+  @override
+  String get homeError => 'Could not load. Please try again.';
+
+  @override
+  String get homeDenied => 'You do not have permission to make this change.';
+
+  @override
+  String get homeUncertain =>
+      'We could not confirm the change. Review the reloaded data before trying again.';
+
+  @override
+  String get homeReviewed => 'I reviewed the data';
+
+  @override
+  String get homeNoProfiles => 'Add your family members to organize the day.';
+
+  @override
+  String get homeAddProfile => 'Add person';
+
+  @override
+  String get homeEditProfile => 'Edit person';
+
+  @override
+  String get homeProfileName => 'Name';
+
+  @override
+  String get homeAdult => 'Adult';
+
+  @override
+  String get homeChild => 'Child';
+
+  @override
+  String get homeBirthDate => 'Birth date (YYYY-MM-DD, optional)';
+
+  @override
+  String get homeInvalidDate => 'Enter a valid date that is not in the future.';
+
+  @override
+  String get homeProfileColor => 'Profile color';
+
+  @override
+  String get homeBoard => 'Free board';
+
+  @override
+  String get homeWrite => 'Write';
+
+  @override
+  String get homeEdit => 'Edit';
+
+  @override
+  String get homeView => 'View board';
+
+  @override
+  String get homeEmptyBoard => 'A space for handwriting. Tap to begin.';
+
+  @override
+  String get homeTasks => 'Routine & Tasks';
+
+  @override
+  String get homeNoTasks => 'No tasks for today.';
+
+  @override
+  String get homeAddTask => 'Add task';
+
+  @override
+  String get homeTaskTitle => 'What shall we do?';
+
+  @override
+  String get homeRefreshTasks => 'Refresh planned tasks';
+
+  @override
+  String get homeFinalized => 'Day finalized. Tasks are available to view.';
+
+  @override
+  String get homeFooter => 'Digital Family Notebook';
+
+  @override
+  String get drawingPen => 'Pen';
+
+  @override
+  String get drawingErase => 'Erase stroke';
+
+  @override
+  String get drawingUndo => 'Undo';
+
+  @override
+  String get drawingRedo => 'Redo';
+
+  @override
+  String get drawingClear => 'Clear board';
+
+  @override
+  String get drawingClearConfirm => 'Erase all strokes on this board?';
+
+  @override
+  String get drawingSaving => 'Saving…';
+
+  @override
+  String get drawingSaved => 'Saved';
+
+  @override
+  String get drawingUnsaved => 'Unsaved changes';
+
+  @override
+  String get drawingSaveError =>
+      'Could not save. Your handwriting is still here; try again.';
+
+  @override
+  String get drawingConflict =>
+      'The board changed on another device. Choose which version to keep.';
+
+  @override
+  String get drawingKeepLocal => 'Save my version';
+
+  @override
+  String get drawingUseRemote => 'Use server version';
+
+  @override
+  String get drawingReplaceConfirm =>
+      'This choice replaces the other version. Continue?';
+
+  @override
+  String get drawingLeaveConfirm =>
+      'There is unsaved handwriting. Save before leaving or discard the changes.';
+
+  @override
+  String get drawingDiscard => 'Discard';
+
+  @override
+  String get drawingLimit =>
+      'The board reached its size limit. Erase some strokes before continuing.';
+
+  @override
+  String get drawingWidth => 'Pen width';
+
+  @override
+  String get drawingSurface => 'Handwriting area';
+
+  @override
+  String homeProgress(int completed, int total) {
+    return '$completed of $total completed';
+  }
+
+  @override
+  String get homeCompletionColor => 'Completed task color';
+
+  @override
+  String get homeDefault => 'Default';
+
+  @override
+  String get familySetupTitle => 'Your family';
+
+  @override
+  String get familySetupIntro =>
+      'Name your family and add the people who belong to it.';
+
+  @override
+  String get familySetupMembers => 'Family members';
+
+  @override
+  String get familySetupNewMember => 'New member';
+
+  @override
+  String get familySetupEditMember => 'Edit member';
+
+  @override
+  String get familySetupCustomColor => 'Choose a pastel color';
+
+  @override
+  String get familySetupHue => 'Hue';
+
+  @override
+  String get familySetupSoftness => 'Softness';
+
+  @override
+  String get familySetupDone => 'Done';
+
+  @override
+  String get familySetupProfile => 'Profile';
+
+  @override
+  String get familySetupCompletedTask => 'Completed task';
+
+  @override
+  String get familySetupFooter => 'BeeHome · Family digital notebook';
+
+  @override
+  String get familySetupCreateHint =>
+      'Save the family name to start adding members.';
+
+  @override
+  String get familySetupRemoveMember => 'Remove member';
+
+  @override
+  String get familySetupRemoveHint =>
+      'Remove this family member? The profile will be deactivated; its history will be preserved.';
+
+  @override
+  String get familySetupBirthDate => 'Birth date (optional)';
+
+  @override
+  String familySetupAge(int age) {
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age years',
+      one: '1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deviceConnectionWifi => 'Wi-Fi connected';
+
+  @override
+  String get deviceConnectionMobile => 'Mobile network';
+
+  @override
+  String get deviceConnectionEthernet => 'Ethernet connected';
+
+  @override
+  String get deviceConnectionOther => 'Other network connection';
+
+  @override
+  String get deviceConnectionOffline => 'No network connection';
+
+  @override
+  String get deviceConnectionUnknown => 'Connection unavailable';
+
+  @override
+  String deviceBatteryLevel(int level) {
+    return 'Battery: $level%';
+  }
+
+  @override
+  String get deviceBatteryCharging => 'Charging';
+
+  @override
+  String get deviceBatteryUnknown => 'Battery unavailable';
+
+  @override
+  String get homeNewNote => 'New note';
+
+  @override
+  String get homeNoteTitle => 'Note title';
+
+  @override
+  String get homeSwipeNotes => 'Swipe to see notes ›';
+
+  @override
+  String get homeNoteTitleOptional => 'Title';
+
+  @override
+  String get noteDelete => 'Delete note';
+
+  @override
+  String get noteDeleteConfirm => 'Delete this note?';
+
+  @override
+  String get noteDeleteError => 'Could not delete this note. Try again.';
+
+  @override
+  String homeActiveNotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active notes',
+      one: '1 active note',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTaskRepeatDaily => 'Repeat daily';
+
+  @override
+  String get homeTaskProfiles => 'Profiles';
+
+  @override
+  String get homeTaskSelectProfile => 'Select at least one profile.';
+
+  @override
+  String get homeTaskRetryRemaining =>
+      'Some assignments may already have been saved. Save again to continue with the remaining profiles.';
+
+  @override
+  String get homeTaskUncertain =>
+      'The result of a save could not be confirmed. Review the tasks for all selected profiles before creating any missing assignments. Confirming this review closes the form.';
+
+  @override
+  String get homeTaskNewLabel => 'New task';
+
+  @override
+  String get homeTaskBack => 'Back to home';
+
+  @override
+  String get homeTaskAssignees => 'Who will do it?';
+
+  @override
+  String get homeTaskSave => 'Save task';
+
+  @override
+  String homeTaskSelectionCount(int count) {
+    return '$count selected';
+  }
 }

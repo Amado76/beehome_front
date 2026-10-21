@@ -73,6 +73,18 @@ void main() {
     session.dispose();
   });
 
+  test('requests automatically include the device UTC offset', () async {
+    final FakeAdapter adapter = FakeAdapter(
+      (RequestOptions options) async => jsonBody(200, {}),
+    );
+    dio.httpClientAdapter = adapter;
+    await api.request('/api/users/me');
+    expect(
+      adapter.requests.single.headers['X-Timezone-Offset'],
+      DateTime.now().timeZoneOffset.inMinutes.toString(),
+    );
+  });
+
   test('protected requests use Bearer; all public routes omit it', () async {
     final FakeAdapter adapter = FakeAdapter(
       (RequestOptions options) async => jsonBody(200, {}),
@@ -251,21 +263,39 @@ void main() {
   });
 
   test(
-    '403 and mutation 401 never trigger automatic renewal or retry',
+    '403 preserves the session without automatic renewal or retry',
     () async {
-      for (final int status in [403, 401]) {
-        final FakeAdapter adapter = FakeAdapter(
-          (RequestOptions options) async => jsonBody(status, {}, problem: true),
-        );
-        dio.httpClientAdapter = adapter;
-        await expectLater(
-          api.request('/api/data', method: status == 401 ? 'POST' : 'GET'),
-          throwsA(isA<ApiError>()),
-        );
-        expect(adapter.requests.length, 1);
-      }
+      final FakeAdapter adapter = FakeAdapter(
+        (RequestOptions options) async => jsonBody(403, {}, problem: true),
+      );
+      dio.httpClientAdapter = adapter;
+      await expectLater(api.request('/api/data'), throwsA(isA<ApiError>()));
+      expect(adapter.requests.length, 1);
+      expect(session.state, SessionState.signedIn);
     },
   );
+
+  for (final method in ['POST', 'PUT', 'PATCH', 'DELETE']) {
+    test('$method 401 signs out without automatic renewal or retry', () async {
+      await preferences.setSelectedFamilyId('family');
+      final FakeAdapter adapter = FakeAdapter(
+        (RequestOptions options) async =>
+            jsonBody(401, {'code': 'UNAUTHENTICATED'}, problem: true),
+      );
+      dio.httpClientAdapter = adapter;
+
+      await expectLater(
+        api.request('/api/data', method: method),
+        throwsA(isA<ApiError>()),
+      );
+
+      expect(adapter.requests.length, 1);
+      expect(session.state, SessionState.signedOut);
+      expect(session.tokens, isNull);
+      expect(await store.read(), isNull);
+      expect(await preferences.selectedFamilyId(), isNull);
+    });
+  }
 
   test(
     'mutation timeout is uncertain and never automatically retried',

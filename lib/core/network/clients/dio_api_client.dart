@@ -97,8 +97,11 @@ class DioApiClient implements ApiClient {
     } on ApiError catch (error) {
       if (!authenticated ||
           error.status != 401 ||
-          !safe ||
           generation != _session.generation) {
+        rethrow;
+      }
+      if (!safe) {
+        await _session.clear();
         rethrow;
       }
       // Another concurrent request may already have rotated these credentials.
@@ -135,6 +138,8 @@ class DioApiClient implements ApiClient {
           method: method,
           headers: {
             'Accept-Language': _language(),
+            'X-Timezone-Offset': DateTime.now().timeZoneOffset.inMinutes
+                .toString(),
             if (authenticated)
               'Authorization': 'Bearer ${_session.tokens!.accessToken}',
           },
